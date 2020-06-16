@@ -48,12 +48,15 @@ def deep_dmae(latent_dim, n_clusters, encoder_model, decoder_model, init_dmae,
     latent = encoder_model(model_in)
     dmae_rec = DMAE_model(latent)
     if cov:
-        full_rec = decoder_model(dmae_rec)
+        full_rec = decoder_model(dmae_rec[0][0])
+        full_model = tf.keras.Model(inputs=[model_in], outputs=[full_rec])
+        # Loss function and optimizer
+        loss = 0.01*tf.losses.mse(model_in, full_rec)+1.0*dis_loss(latent, *dmae_rec[0])
     else:
-        full_rec = decoder_model(dmae_rec[0])
-    full_model = tf.keras.Model(inputs=[model_in], outputs=[full_rec])
-    # Loss function and optimizer
-    loss = 0.01*tf.losses.mse(model_in, full_rec)+1.0*dis_loss(latent, *dmae_rec[0])
+        full_rec = decoder_model(dmae_rec)
+        full_model = tf.keras.Model(inputs=[model_in], outputs=[full_rec])
+        # Loss function and optimizer
+        loss = 0.01*tf.losses.mse(model_in, full_rec)+1.0*dis_loss(latent, dmae_rec)
     full_model.add_loss(loss)
     # Defining a deep encoder
     if cov:

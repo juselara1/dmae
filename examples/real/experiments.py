@@ -19,7 +19,7 @@ import DMAE, datasets, FC_dmae, CNN_dmae
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Train a specified model.')
     parser.add_argument("--dataset", type=str, help="Dataset (e.g., mnist, reuters10, fashion)", default="mnist")
-    parser.add_argument("--model", type=str, help="Model to be trained (e.g., FC_dmae)", default="FC_dmae")
+    parser.add_argument("--model", type=str, help="Model to be trained (e.g., FC_dmae, CNN_dmae)", default="FC_dmae")
     parser.add_argument("--trials", type=int, action="store", dest="trials",
                         help="Number of trials to train the model.", default=10)
     parser.add_argument("--dis", type=str, help="Dissimilarity function for DMAE model (e.g., euclidean, cosine, mahalanobis, manhattan)", default="euclidean")
@@ -111,6 +111,9 @@ if __name__=="__main__":
                                                   "cov": DMAE.Initializers.InitKMeansCov(pretrainer, X_latent, n_clusters),
                                                   "mixers": tf.keras.initializers.Constant(1.0)}
         cov = True
+    else:
+        raise Exception(f"Not recognized dissimilarity: {args.dis}")
+        
     os.system("clear")
     if args.model == "FC_dmae":
         encoder_dims = [500, 500, 2000]
@@ -120,13 +123,12 @@ if __name__=="__main__":
                            "verbose": False, "use_multiprocessing": True}
         cluster_params = {"epochs": args.cluster_epochs, "steps_per_epoch": N//args.train_batch,
                           "verbose": False, "use_multiprocessing": True}
-        print(f"Training: {args.model}, using dissimilarity: {args.dis}, total trials: {args.trials}, augmentation {args.da}")
+        print(f"Training: {args.model}, dataset: {args.dataset}, using dissimilarity: {args.dis}, total trials: {args.trials}, augmentation {args.da}")
         input_layer = tf.keras.layers.Input(shape=input_shape)
         make_autoencoder = lambda: FC_dmae.autoencoder(encoder_dims, decoder_dims, latent_dim, input_layer)
         make_dmae = lambda encoder, decoder, X_latent, make_pretrainer: FC_dmae.deep_dmae(latent_dim, n_clusters, encoder, decoder,
-                                                                                          init_dmae, args.train_batch, args.test_batch,
-                                                                                          dis, dis_loss, make_pretrainer, input_shape, cov,
-                                                                                          X_latent)
+                                                                                          init_dmae, dis, dis_loss, make_pretrainer, 
+                                                                                          input_shape, cov, X_latent)
 
         FC_dmae.train(ds_pretrain, ds_cluster, ds_test, y, N, args.test_batch, args.trials,
                       make_autoencoder, make_dmae, pretrain_optimizer, cluster_optimizer,

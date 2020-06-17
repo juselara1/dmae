@@ -40,18 +40,18 @@ class InitPlusPlus(tf.keras.initializers.Initializer):
         init_vals = self.__X[idx[:self.__n_clusters]]
 
         for i in range(self.__iters):
-            clus_sim = self.__dissimilarity(init_vals, init_vals, batch_size=self.__n_clusters).numpy()
+            clus_sim = self.__dissimilarity(init_vals, init_vals).numpy()
             np.fill_diagonal(clus_sim, np.inf)
 
             candidate = self.__X[np.random.randint(self.__X.shape[0])].reshape(1, -1)
-            candidate_sims = self.__dissimilarity(candidate, init_vals, batch_size=1).numpy().flatten()
+            candidate_sims = self.__dissimilarity(candidate, init_vals).numpy().flatten()
             closest_sim = candidate_sims.min()
             closest = candidate_sims.argmin()
             if closest_sim>clus_sim.min():
                 replace_candidates_idx = np.array(np.unravel_index(clus_sim.argmin(), clus_sim.shape))
                 replace_candidates = init_vals[replace_candidates_idx, :]
 
-                closest_sim = self.__dissimilarity(candidate, replace_candidates, batch_size=1).numpy().flatten()
+                closest_sim = self.__dissimilarity(candidate, replace_candidates).numpy().flatten()
                 replace = np.argmin(closest_sim)
                 init_vals[replace_candidates_idx[replace]] = candidate
             else:

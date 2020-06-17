@@ -24,27 +24,24 @@ class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
             of points and the cluster's parameters (means).
         trainable: dict, default: {"centers": True, "mixers":False}
             A dictionary of bool variables to specify which parameters must be trained.
-        batch_size: int, default: 32
-            Batch size that is used to compute the paiwise dissimilarities.
         initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
             A dictionary with tf.keras.initializers to initialize each parameter.
     """
     
     def __init__(self, alpha, n_clusters, dissimilarity=Dissimilarities.euclidean, trainable={"centers": True, "mixers":False},
-                 batch_size=32, initializers={"centers": tf.keras.initializers.RandomUniform(-1,1),
-                                              "mixers": tf.keras.initializers.Constant(1.0)}, **kwargs):
+                 initializers={"centers": tf.keras.initializers.RandomUniform(-1,1),
+                               "mixers": tf.keras.initializers.Constant(1.0)}, **kwargs):
         self.__alpha = tf.constant(alpha, dtype=tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
-        self.__batch_size = batch_size
         self.__initializers = initializers
         super(DissimilarityMixtureAutoencoder, self).__init__(**kwargs)
         
     def call(self, x):
         """Forward pass in DMAE"""
         
-        D = self.__dissimilarity(x, self.centers, self.__batch_size) # Compute pairwise dissimilarities
+        D = self.__dissimilarity(x, self.centers) # Compute pairwise dissimilarities
         assigns = tf.nn.softmax(-self.__alpha*D+tf.math.log(tf.nn.relu(self.mixers))) # Soft-assignments
         mu_tilde = tf.matmul(assigns, self.centers) # Reconstruction of the assigned mean.
         return mu_tilde
@@ -72,27 +69,24 @@ class DissimilarityMixtureEncoder(tf.keras.layers.Layer):
             of points and the cluster's parameters (means).
         trainable: dict, default: {"centers": True, "mixers":False}
             A dictionary of bool variables to specify which parameters must be trained.
-        batch_size: int, default: 32
-            Batch size that is used to compute the paiwise dissimilarities.
         initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
             A dictionary with tf.keras.initializers to initialize each parameter.
     """
     
     def __init__(self, alpha, n_clusters, dissimilarity=Dissimilarities.euclidean, trainable={"centers": True, "mixers":False},
-                 batch_size=32, initializers={"centers": tf.keras.initializers.RandomUniform(-1,1),
-                                              "mixers": tf.keras.initializers.Constant(1.0)}, **kwargs):
+                 initializers={"centers": tf.keras.initializers.RandomUniform(-1,1),
+                               "mixers": tf.keras.initializers.Constant(1.0)}, **kwargs):
         self.__alpha = tf.constant(alpha, dtype=tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
-        self.__batch_size = batch_size
         self.__initializers = initializers
         super(DissimilarityMixtureEncoder, self).__init__(**kwargs)
         
     def call(self, x):
         """Forward pass in DM-Encoder"""
         
-        D = self.__dissimilarity(x, self.centers, self.__batch_size) # Compute pairwise dissimilarities
+        D = self.__dissimilarity(x, self.centers) # Compute pairwise dissimilarities
         assigns = tf.nn.softmax(-self.__alpha*D+tf.math.log(tf.nn.relu(self.mixers))) # Soft-assignments
         return assigns
     
@@ -119,29 +113,22 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
             of points and the cluster's parameters (means and covariances).
         trainable: dict, default: {"centers": True, "cov": True, "mixers":False}
             A dictionary of bool variables to specify which parameters must be trained.
-        batch_size: int, default: 32
-            Batch size that is used to compute the paiwise dissimilarities.
         initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
             A dictionary with tf.keras.initializers to initialize each parameter.
         grad_modifier: float, default=1
             A value that scales the gradients for the covariances matrices.
-        compute_cov: bool, default=True
-            Specify if the covarance must be computed, otherwise the layer returns its decomposition.
     """
     
     def __init__(self, alpha, n_clusters, dissimilarity=Dissimilarities.mahalanobis,
-                 trainable={"centers": True, "cov":True, "mixers":True}, batch_size=32,
+                 trainable={"centers": True, "cov":True, "mixers":True},
                  initializers={"centers":tf.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1),
-                               "mixers":tf.keras.initializers.Constant(1.0)}, grad_modifier=1,
-                 compute_cov=True, **kwargs):
+                               "mixers":tf.keras.initializers.Constant(1.0)}, grad_modifier=1, **kwargs):
         self.__alpha = tf.constant(alpha, dtype=tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
-        self.__batch_size = batch_size
         self.__initializers = initializers
         self.__grad_modifier = grad_modifier
-        self.__compute_cov = True
         super(DissimilarityMixtureAutoencoderCov, self).__init__(**kwargs)
         
     @tf.custom_gradient
@@ -157,14 +144,11 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
         """Forward pass in DMAE"""
         
         cov = self.__psd_matrix(self.cov) # Defining a PSD matrix
-        D = self.__dissimilarity(x, self.centers, cov, self.__batch_size) # Compute pairwise dissimilarities
+        D = self.__dissimilarity(x, self.centers, cov) # Compute pairwise dissimilarities
         bias = tf.math.log(tf.nn.relu(self.mixers)) # Computes the bias using the mixers
         assigns = tf.nn.softmax(-self.__alpha*D+bias) # Soft-assignments
         mu_hat = tf.matmul(assigns, self.centers) # Reconstruction of the assigned mean.
-        if self.__compute_cov:
-            Cov_hat = tf.tensordot(assigns, cov, axes=[[1], [0]]) # Reconstruction of the assigned covariance.
-        else:
-            Cov_hat = tf.tensordot(assigns, self.cov, axes=[[1], [0]]) # Reconstruction of the assigned covariance decomposition.
+        Cov_hat = tf.tensordot(assigns, cov, axes=[[1], [0]]) # Reconstruction of the assigned covariance.
         return mu_hat, Cov_hat
     
     def build(self, input_shape):
@@ -192,8 +176,6 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
             of points and the cluster's parameters (means and covariances).
         trainable: dict, default: {"centers": True, "cov": True, "mixers":False}
             A dictionary of bool variables to specify which parameters must be trained.
-        batch_size: int, default: 32
-            Batch size that is used to compute the paiwise dissimilarities.
         initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
             A dictionary with tf.keras.initializers to initialize each parameter.
         grad_modifier: float, default=1,
@@ -201,14 +183,13 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
     """
     
     def __init__(self, alpha, n_clusters, dissimilarity=Dissimilarities.mahalanobis,
-                 trainable={"centers": True, "cov":True, "mixers":True}, batch_size=32,
+                 trainable={"centers": True, "cov":True, "mixers":True},
                  initializers={"centers":tf.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1),
                                "mixers":tf.keras.initializers.Constant(1.0)}, grad_modifier=1, **kwargs):
         self.__alpha = tf.constant(alpha, dtype=tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
-        self.__batch_size = batch_size
         self.__initializers = initializers
         self.__grad_modifier = grad_modifier
         super(DissimilarityMixtureEncoderCov, self).__init__(**kwargs)
@@ -226,7 +207,7 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
         """Forward pass in DM-Encoder"""
         
         cov = self.__psd_matrix(self.cov) # Defining a PSD matrix
-        D = self.__dissimilarity(x, self.centers, cov, self.__batch_size) # Compute pairwise dissimilarities
+        D = self.__dissimilarity(x, self.centers, cov) # Compute pairwise dissimilarities
         bias = tf.math.log(tf.nn.relu(self.mixers)) # Computes the bias using the mixers
         assigns = tf.nn.softmax(-self.__alpha*D+bias) # Soft-assignments
         return assigns

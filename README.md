@@ -8,9 +8,7 @@ Tensorflow implementation of the Dissimilarity Mixture Autoencoder:
 
 In this paper, we introduce the Dissimilarity Mixture Autoencoder (DMAE), a novel neural network model that uses a dissimilarity function to generalize a family of density estimation and clustering methods. It is formulated in such a way that it internally estimates the parameters of a probability distribution through gradient-based optimization. Also, the proposed model can leverage from deep representation learning due to its straightforward incorporation into deep learning architectures, because, it consists of an encoder-decoder network that computes a probabilistic representation. Experimental evaluation was performed on image and text clustering benchmark datasets showing that the method is competitive in terms of unsupervised classification accuracy and normalized mutual information.
 
-## Installation
-
-### Requirements
+## Requirements
 
 If you have [anaconda](https://www.anaconda.com/) installed, you can create the same environment that we used for the experiments using the following command:
 
@@ -30,7 +28,7 @@ or
 conda activate dmae
 ```
 
-### Usage
+## Usage
 
 This implementation is based on `tf.keras.layers`, therefore, DMAE can be easily used in other deep learning models as an intermediate layer. A replication of the experiments can be found in the folder `examples`, we highly recommend to check the experiments on synthetic data first: `examples/synthetic/`. They provide an interactive experience that is useful to interpret the learned representations of DMAE.
 

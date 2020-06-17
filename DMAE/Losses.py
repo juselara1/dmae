@@ -55,7 +55,7 @@ def correlation_loss(X, mu_tilde):
     
     centered_X = X-tf.reshape(tf.reduce_mean(X, axis=0),(1, -1))
     centered_mu_tilde = mu_tilde-tf.reshape(tf.reduce_mean(mu_tilde, axis=1), (-1,1))
-    return CosineLoss(centered_X, centered_mu_tilde)
+    return cosine_loss(centered_X, centered_mu_tilde)
 
 def manhattan_loss(X, mu_tilde):
     """

@@ -26,20 +26,18 @@ def autoencoder(encoder_dims, decoder_dims, latent_dim, input_layer,
     return encoder_model, decoder_model, ae_model
 
 def deep_dmae(latent_dim, n_clusters, encoder_model, decoder_model, init_dmae,
-              train_batch, test_batch, dis, dis_loss, pretrainer, input_shape,
-              cov, X_latent):
+              dis, dis_loss, pretrainer, input_shape, cov, X_latent):
     # Defining DMAE Model
     inp = tf.keras.layers.Input(shape=(latent_dim, ))
     # DMAE layer
     if cov:
         DMAE_layer = DMAE.Layers.DissimilarityMixtureAutoencoderCov(10000, n_clusters, dissimilarity=dis,
                                                                     trainable={"centers":True, "cov":True, "mixers":True},
-                                                                    batch_size=train_batch, grad_modifier=1,
+                                                                    grad_modifier=1,
                                                                     initializers=init_dmae(pretrainer, X_latent))(inp)
     else:
         DMAE_layer = DMAE.Layers.DissimilarityMixtureAutoencoder(10000, n_clusters, dissimilarity=dis,
                                                                  trainable={"centers":True, "mixers":True},
-                                                                 batch_size=train_batch, 
                                                                  initializers=init_dmae(pretrainer))(inp)
     # defining keras model
     DMAE_model = tf.keras.Model(inputs=[inp], outputs=[DMAE_layer])
@@ -60,11 +58,9 @@ def deep_dmae(latent_dim, n_clusters, encoder_model, decoder_model, init_dmae,
     full_model.add_loss(loss)
     # Defining a deep encoder
     if cov:
-        DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoderCov(10000, n_clusters, dissimilarity=dis,
-                                                                  batch_size=test_batch)(latent)
+        DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoderCov(10000, n_clusters, dissimilarity=dis)(latent)
     else:
-        DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoder(10000, n_clusters, dissimilarity=dis,
-                                                               batch_size=test_batch)(latent)
+        DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoder(10000, n_clusters, dissimilarity=dis)(latent)
     full_encoder = tf.keras.Model(inputs=model_in, outputs=DMAE_encoder)
     return full_model, full_encoder
 

@@ -8,38 +8,30 @@ Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/l
 
 import tensorflow as tf
 
-@tf.function
-def euclidean(X, Y, batch_size=32):
+def euclidean(X, Y):
     """
-    Computes a pairwise Euclidean distance between two matrices: ||x-y||^2.
+    Computes a pairwise Euclidean distance between two matrices: D_ij=||x_i-y_j||^2.
     Arguments:
         X: array-like, shape=(batch_size, n_features)
             Input batch matrix.
         Y: array-like, shape=(n_clusters, n_features)
             Matrix in which each row represents the mean vector of each cluster.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
     """
-    
-    Z = []
-    for i in range(batch_size):
-        Z.append(tf.reshape(tf.sqrt(tf.reduce_sum((X[i]-Y)**2, axis=1)), (1, -1)))
-    return tf.concat(Z, axis=0)
+    func = lambda x_i: tf.sqrt(tf.reduce_sum((x_i-Y)**2, axis=1))
+    Z = tf.map_fn(func, X)
+    return Z
 
-@tf.function
-def cosine(X, Y, batch_size=32):
+def cosine(X, Y):
     """
-    Computes a pairwise Cosine distance between two matrices: (x·y)/(||x||·||y||).
+    Computes a pairwise Cosine distance between two matrices: D_ij=(x_i·y_j)/(||x_i||·||y_j||).
     Arguments:
         X: array-like, shape=(batch_size, n_features)
             Input batch matrix.
         Y: array-like, shape=(n_clusters, n_features)
             Matrix in which each row represents the mean vector of each cluster.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
@@ -50,17 +42,14 @@ def cosine(X, Y, batch_size=32):
     D = 1-tf.matmul(norm_X, norm_Y, transpose_b=True)
     return D
 
-@tf.function
-def correlation(X, Y, batch_size=32):
+def correlation(X, Y):
     """
-    Computes a pairwise correlation between two matrices: ((x-mu_x)·(y-mu_y))/(||x-mu_x||·||y-mu_y||).
+    Computes a pairwise correlation between two matrices: D_ij=(x_i-mu_x_i)·(y_j-mu_y_j)/(||x_i-mu_x_i||·||y_j-mu_y_j||).
     Arguments:
         X: array-like, shape=(batch_size, n_features)
             Input batch matrix.
         Y: array-like, shape=(n_clusters, n_features)
             Matrix in which each row represents the mean vector of each cluster.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
@@ -73,31 +62,26 @@ def correlation(X, Y, batch_size=32):
     D = 1-tf.matmul(norm_X, norm_Y, transpose_b=True)
     return D
 
-@tf.function
-def manhattan(X, Y, batch_size=32):
+def manhattan(X, Y):
     """
-    Computes a pairwise manhattan distance between two matrices: sum(|x_i|-|y_j|).
+    Computes a pairwise manhattan distance between two matrices: D_ij=sum(|x_i|-|y_j|).
     Arguments:
         X: array-like, shape=(batch_size, n_features)
             Input batch matrix.
         Y: array-like, shape=(n_clusters, n_features)
             Matrix in which each row represents the mean vector of each cluster.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
     """
     
-    Z = []
-    for i in range(batch_size):
-        Z.append(tf.reshape(tf.reduce_sum(tf.abs(X[i]-Y), axis=1), (1, -1)))
-    return tf.concat(Z, axis=0)
+    func = lambda x_i: tf.reduce_sum(tf.abs(x_i-Y), axis=1)
+    Z = tf.map_fn(func, X)
+    return Z
 
-@tf.function
-def minkowsky(X, Y, p, batch_size=32):
+def minkowsky(X, Y, p):
     """
-    Computes a pairwise Minkowski distance between two matrices: sum(|x_i-y_j|^p)^(1/p).
+    Computes a pairwise Minkowski distance between two matrices: D_ij=sum(|x_i-y_j|^p)^(1/p).
     Arguments:
         X: array-like, shape=(batch_size, n_features)
             Input batch matrix.
@@ -105,23 +89,18 @@ def minkowsky(X, Y, p, batch_size=32):
             Matrix in which each row represents the mean vector of each cluster.
         p: float
             Order of the Minkowski distance.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
     """
-    
-    Z = []
-    for i in range(batch_size):
-        if p>1:
-            Z.append(tf.reshape(tf.reduce_sum(tf.abs(X[i]-Y)**p, axis=1), (1, -1))**(1/p))
-        else:
-            Z.append(tf.reshape(tf.reduce_sum(tf.abs(X[i]-Y)**p, axis=1), (1, -1)))
-    return tf.concat(Z, axis=0)
+    if p>1:
+        func = lambda x_i: tf.reduce_sum(tf.abs(x_i-Y)**p, axis=1)**(1/p)
+    else:
+        func = lambda x_i: tf.reduce_sum(tf.abs(x_i-Y), axis=1)
+    Z = tf.map_fn(func, X)
+    return Z
 
-@tf.function
-def chebyshev(X, Y, batch_size=32):
+def chebyshev(X, Y):
     """
     Computes a pairwise Chevyshev distance between two matrices: max(|x_i-y_j|).
     Arguments:
@@ -129,22 +108,19 @@ def chebyshev(X, Y, batch_size=32):
             Input batch matrix.
         Y: array-like, shape=(n_clusters, n_features)
             Matrix in which each row represents the mean vector of each cluster.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
     """
     
-    Z = []
-    for i in range(batch_size):
-        Z.append(tf.reshape(tf.reduce_max(tf.abs(X[i]-Y), axis=1), (1, -1)))
-    return tf.concat(Z, axis=0)
+    func = lambda x_i: tf.reduce_max(tf.abs(x_i-Y), axis=1)
+    Z = tf.map_fn(func, X)
+    return Z
 
 @tf.function
-def mahalanobis(X, Y, cov, batch_size=32):
+def mahalanobis(X, Y, cov):
     """
-    Computes a pairwise Mahalanobis distance between two matrices: (x-y)^T Cov (x-y).
+    Computes a pairwise Mahalanobis distance between two matrices: (x_i-y_j)^T Cov_j (x_i-y_j).
     Arguments:
         X: array-like, shape=(batch_size, n_features)
             Input batch matrix.
@@ -152,18 +128,16 @@ def mahalanobis(X, Y, cov, batch_size=32):
             Matrix in which each row represents the mean vector of each cluster.
         cov: array-like, shape=(n_clusters, n_features, n_features)
             Tensor with all the covariance matrices.
-        batch_size: int, default=32
-            Batch size that is used to compute the paiwise dissimilarities.
     Returns:
         D: array-like, shape=(batch_size, n_clusters)
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
     """
     
-    Z = []
-    for i in range(batch_size):
-        diff = tf.expand_dims(X[i]-Y, axis=-1)
-        Z.append(tf.reshape(tf.reduce_sum(tf.matmul(cov, diff)*diff, axis=1), (1, -1)))
-    return tf.concat(Z, axis=0)
+    def func(x_i):
+        diff = tf.expand_dims(x_i-Y, axis=-1)
+        return tf.squeeze(tf.reduce_sum(tf.matmul(cov, diff)*diff, axis=1))
+    Z = tf.map_fn(func, X)
+    return Z
 
 class dissimilarities():
     def __init__(self):

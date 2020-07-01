@@ -1,5 +1,8 @@
 # Dissimilarity Mixture Autoencoder
 
+![dmae](https://raw.githubusercontent.com/larajuse/Resources/master/dmae/dmae.svg)
+![example](https://raw.githubusercontent.com/larajuse/Resources/fed6276cf237f6b47b816af3d2a32c6508e00f1e/dmae/nonglobular.svg)
+
 Tensorflow implementation of the Dissimilarity Mixture Autoencoder:
 
 * Juan S. Lara and Fabio A. González. ["Dissimilarity Mixture Autoencoder for Deep Clustering"](https://arxiv.org/abs/2006.08177) arXiv preprint arXiv:2006.08177 (2020).

@@ -1,7 +1,6 @@
 # Dissimilarity Mixture Autoencoder
 
 ![dmae](https://raw.githubusercontent.com/larajuse/Resources/master/dmae/dmae.svg)
-![example](https://raw.githubusercontent.com/larajuse/Resources/fed6276cf237f6b47b816af3d2a32c6508e00f1e/dmae/nonglobular.svg)
 
 Tensorflow implementation of the Dissimilarity Mixture Autoencoder:
 
@@ -34,6 +33,8 @@ conda activate dmae
 ## Usage
 
 This implementation is based on `tf.keras.layers`, therefore, DMAE can be easily used in other deep learning models as an intermediate layer. A replication of the experiments can be found in the folder `examples`, we highly recommend to check the experiments on synthetic data first: `examples/synthetic/`. They provide an interactive experience that is useful to interpret the learned representations of DMAE.
+
+![example](https://raw.githubusercontent.com/larajuse/Resources/fed6276cf237f6b47b816af3d2a32c6508e00f1e/dmae/nonglobular.svg)
 
 For the real data `examples/real`, you can run `python experiments.py -h` for more information about the possible options.
 

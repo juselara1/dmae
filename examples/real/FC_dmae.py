@@ -62,9 +62,10 @@ def deep_dmae(latent_dim, n_clusters, encoder_model, decoder_model, init_dmae,
     else:
         DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoder(10000, n_clusters, dissimilarity=dis)(latent)
     full_encoder = tf.keras.Model(inputs=model_in, outputs=DMAE_encoder)
+    full_encoder.layers[-1].set_weights(full_model.layers[2].get_weights())
     return full_model, full_encoder
 
-def train(ds_pretrain, ds_cluster, ds_test, y, N, test_batch, trials, make_autoencoder, make_dmae,
+def train(ds_aug, ds_cluster, X, y, da, train_batch, test_batch, trials, make_autoencoder, make_dmae,
           pretrain_optimizer, cluster_optimizer, make_pretrainer, pretrain_params, cluster_params):
     # Lists to store the ae_kmeans results
     accs1 = []; nmis1 = []; aris1 = []
@@ -76,9 +77,12 @@ def train(ds_pretrain, ds_cluster, ds_test, y, N, test_batch, trials, make_autoe
         encoder_model, decoder_model, ae_model = make_autoencoder()
         ae_model.compile(loss="mse", optimizer=pretrain_optimizer["type"](**pretrain_optimizer["params"]))
         # Pretraining the model
-        ae_model.fit(ds_pretrain, **pretrain_params)
+        if da:
+            ae_model.fit(ds_aug, **pretrain_params)
+        else:
+            ae_model.fit(X, X, **pretrain_params)
         # Data representation in the latent space
-        X_latent = encoder_model.predict(ds_test, steps=N//test_batch)
+        X_latent = encoder_model.predict(X, batch_size=test_batch)
         # Training a KMeans model to initialize DMAE
         pretrainer = make_pretrainer()
         pretrainer.fit(X_latent)
@@ -93,10 +97,9 @@ def train(ds_pretrain, ds_cluster, ds_test, y, N, test_batch, trials, make_autoe
         full_model, full_encoder = make_dmae(encoder_model, decoder_model, X_latent, pretrainer)
         full_model.compile(optimizer=cluster_optimizer["type"](**cluster_optimizer["params"]))
         # Training the full model
-        callbacks = [DMAE.Callbacks.DeltaUACC(full_encoder, ds_test, N, verbose=False, interval=140, batch_size=test_batch, tol=1e-4)]
-        full_model.fit(ds_cluster, callbacks=callbacks, **cluster_params)
+        full_model.fit(ds_cluster, **cluster_params)
         # Clustering evaluation
-        preds = full_encoder.predict(ds_test, steps=N//test_batch)
+        preds = full_encoder.predict(X, steps=test_batch, verbose=False)
         # Obtaning the assigned clusters
         y_pred = np.argmax(preds, axis=1)
         

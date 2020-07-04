@@ -21,7 +21,7 @@ def euclidean(X, Y):
             Matrix of paiwise dissimilarities between the batch and the cluster's parameters.
     """
     func = lambda x_i: tf.sqrt(tf.reduce_sum((x_i-Y)**2, axis=1))
-    Z = tf.map_fn(func, X)
+    Z = tf.vectorized_map(func, X)
     return Z
 
 def cosine(X, Y):
@@ -76,7 +76,7 @@ def manhattan(X, Y):
     """
     
     func = lambda x_i: tf.reduce_sum(tf.abs(x_i-Y), axis=1)
-    Z = tf.map_fn(func, X)
+    Z = tf.vectorized_map(func, X)
     return Z
 
 def minkowsky(X, Y, p):
@@ -97,7 +97,7 @@ def minkowsky(X, Y, p):
         func = lambda x_i: tf.reduce_sum(tf.abs(x_i-Y)**p, axis=1)**(1/p)
     else:
         func = lambda x_i: tf.reduce_sum(tf.abs(x_i-Y), axis=1)
-    Z = tf.map_fn(func, X)
+    Z = tf.vectorized_map(func, X)
     return Z
 
 def chebyshev(X, Y):
@@ -114,7 +114,7 @@ def chebyshev(X, Y):
     """
     
     func = lambda x_i: tf.reduce_max(tf.abs(x_i-Y), axis=1)
-    Z = tf.map_fn(func, X)
+    Z = tf.vectorized_map(func, X)
     return Z
 
 @tf.function
@@ -136,7 +136,7 @@ def mahalanobis(X, Y, cov):
     def func(x_i):
         diff = tf.expand_dims(x_i-Y, axis=-1)
         return tf.squeeze(tf.reduce_sum(tf.matmul(cov, diff)*diff, axis=1))
-    Z = tf.map_fn(func, X)
+    Z = tf.vectorized_map(func, X)
     return Z
 
 class dissimilarities():

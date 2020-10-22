@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Implementation of: Dissimilarity Mixture Autoencoder (DMAE) for Deep Clustering.
 
@@ -8,7 +9,7 @@ Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/l
 
 import tensorflow as tf
 
-def euclidean_loss(X, mu_tilde):
+def euclidean_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Euclidean loss.
     Arguments:
@@ -21,9 +22,9 @@ def euclidean_loss(X, mu_tilde):
             Computed loss for each sample.
     """
     
-    return tf.sqrt(tf.reduce_sum((X-mu_tilde)**2, axis=1))
+    return tf.reduce_sum(tf.sqrt(tf.reduce_sum((X-mu_tilde)**2, axis=1))-tf.math.log(pi_tilde)/alpha)
 
-def cosine_loss(X, mu_tilde):
+def cosine_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Cosine loss.
     Arguments:
@@ -38,9 +39,9 @@ def cosine_loss(X, mu_tilde):
     
     X_norm = tf.nn.l2_normalize(X, axis=1)
     mu_tilde_norm = tf.nn.l2_normalize(mu_tilde, axis=1)
-    return 1-tf.reduce_sum(X_norm*mu_tilde_norm, axis=1)
+    return tf.reduce_sum((1-tf.reduce_sum(X_norm*mu_tilde_norm, axis=1))-tf.math.log(pi_tilde)/alpha)
 
-def correlation_loss(X, mu_tilde):
+def correlation_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Correlation loss.
     Arguments:
@@ -55,9 +56,9 @@ def correlation_loss(X, mu_tilde):
     
     centered_X = X-tf.reshape(tf.reduce_mean(X, axis=0),(1, -1))
     centered_mu_tilde = mu_tilde-tf.reshape(tf.reduce_mean(mu_tilde, axis=1), (-1,1))
-    return cosine_loss(centered_X, centered_mu_tilde)
+    return cosine_loss(centered_X, centered_mu_tilde, pi_tilde, alpha)
 
-def manhattan_loss(X, mu_tilde):
+def manhattan_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Manhattan loss.
     Arguments:
@@ -70,9 +71,9 @@ def manhattan_loss(X, mu_tilde):
             Computed loss for each sample.
     """
     
-    return tf.reduce_sum(tf.abs(X-mu_tilde), axis=1)
+    return tf.reduce_sum(tf.reduce_sum(tf.abs(X-mu_tilde), axis=1)-tf.math.log(pi_tilde)/alpha)
 
-def minkowsky_loss(X, mu_tilde, p):
+def minkowsky_loss(X, mu_tilde, pi_tilde, alpha, p):
     """
     Computes the Manhattan loss.
     Arguments:
@@ -87,9 +88,9 @@ def minkowsky_loss(X, mu_tilde, p):
             Computed loss for each sample.
     """
     
-    return tf.reduce_sum(tf.abs(X-mu_tilde)**p, axis=1)**(1/p)
+    return tf.reduce_sum(tf.reduce_sum(tf.abs(X-mu_tilde)**p, axis=1)**(1/p)-tf.math.log(pi_tilde)/alpha)
 
-def chebyshev_loss(X, mu_tilde):
+def chebyshev_loss(X, mu_tilde, pi_tilde, alpha, p):
     """
     Computes the Chebyshev loss.
     Arguments:
@@ -102,9 +103,9 @@ def chebyshev_loss(X, mu_tilde):
             Computed loss for each sample.
     """
     
-    return tf.reduce_max(tf.abs(X-mu_tilde), axis=1)
+    return tf.reduce_sum(tf.reduce_max(tf.abs(X-mu_tilde), axis=1)-tf.math.log(pi_tilde)/alpha)
 
-def mahalanobis_loss(X, mu_tilde, Cov_tilde):
+def mahalanobis_loss(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
     """
     Computes the Mahalanobis loss.
     Arguments:
@@ -120,9 +121,10 @@ def mahalanobis_loss(X, mu_tilde, Cov_tilde):
     """
     
     diff = tf.expand_dims(X-mu_tilde, axis=1)
-    return tf.squeeze(tf.matmul(tf.matmul(diff, Cov_tilde), tf.transpose(diff, perm = [0, 2, 1])))
+    return tf.reduce_sum(tf.squeeze(tf.matmul(tf.matmul(diff, Cov_tilde), tf.transpose(diff, perm = [0, 2, 1])))\
+                         -tf.math.log(pi_tilde)/alpha)
 
-def mahalanobis_loss_decomp(X, mu_tilde, Cov_tilde):
+def mahalanobis_loss_decomp(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
     """
     Computes the Mahalanobis loss using the decomposition of the covariance matrices.
     Arguments:
@@ -139,7 +141,8 @@ def mahalanobis_loss_decomp(X, mu_tilde, Cov_tilde):
     
     cov = tf.matmul(Cov_tilde, tf.transpose(Cov_tilde, [0, 2, 1]))
     diff = tf.expand_dims(X-mu_tilde, axis=1)
-    return tf.squeeze(tf.matmul(tf.matmul(diff, cov), tf.transpose(diff, perm = [0, 2, 1])))
+    return tf.reduce_sum(tf.squeeze(tf.matmul(tf.matmul(diff, cov), tf.transpose(diff, perm = [0, 2, 1])))\
+                         -tf.math.log(pi_tilde)/alpha)
 
 class losses():
     def __init__(self):

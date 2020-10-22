@@ -27,42 +27,34 @@ def autoencoder(encoder_dims, decoder_dims, latent_dim, input_layer,
 
 def deep_dmae(latent_dim, n_clusters, encoder_model, decoder_model, init_dmae,
               dis, dis_loss, pretrainer, input_shape, cov, X_latent):
+    alpha = 1000
     # Defining DMAE Model
-    inp = tf.keras.layers.Input(shape=(latent_dim, ))
+    inp = tf.keras.layers.Input(shape=input_shape)
+    h = encoder_model(inp)
+    
     # DMAE layer
     if cov:
-        DMAE_layer = DMAE.Layers.DissimilarityMixtureAutoencoderCov(10000, n_clusters, dissimilarity=dis,
-                                                                    trainable={"centers":True, "cov":True, "mixers":True},
-                                                                    grad_modifier=1,
-                                                                    initializers=init_dmae(pretrainer, X_latent))(inp)
+        theta_tilde = DMAE.Layers.DissimilarityMixtureAutoencoderCov(alpha, n_clusters, dissimilarity=dis,
+                                                                     trainable={"centers":True, "cov":True, "mixers":True},
+                                                                     grad_modifier=1,
+                                                                     initializers=init_dmae(pretrainer, X_latent))(h)
     else:
-        DMAE_layer = DMAE.Layers.DissimilarityMixtureAutoencoder(10000, n_clusters, dissimilarity=dis,
-                                                                 trainable={"centers":True, "mixers":True},
-                                                                 initializers=init_dmae(pretrainer))(inp)
-    # defining keras model
-    DMAE_model = tf.keras.Model(inputs=[inp], outputs=[DMAE_layer])
-    # Defining complete model
-    model_in = tf.keras.layers.Input(shape=input_shape)
-    latent = encoder_model(model_in)
-    dmae_rec = DMAE_model(latent)
-    if cov:
-        full_rec = decoder_model(dmae_rec[0][0])
-        full_model = tf.keras.Model(inputs=[model_in], outputs=[full_rec])
-        # Loss function and optimizer
-        loss = 0.01*tf.losses.mse(model_in, full_rec)+1.0*dis_loss(latent, *dmae_rec[0])
-    else:
-        full_rec = decoder_model(dmae_rec)
-        full_model = tf.keras.Model(inputs=[model_in], outputs=[full_rec])
-        # Loss function and optimizer
-        loss = 0.01*tf.losses.mse(model_in, full_rec)+1.0*dis_loss(latent, dmae_rec)
+        theta_tilde = DMAE.Layers.DissimilarityMixtureAutoencoder(alpha, n_clusters, dissimilarity=dis,
+                                                                  trainable={"centers":True, "mixers":True},
+                                                                  initializers=init_dmae(pretrainer))(h)
+    x_tilde = decoder_model(theta_tilde[0])
+    full_model = tf.keras.Model(inputs=[inp], outputs=x_tilde)
+    
+    loss1 = dis_loss(h, *theta_tilde, alpha)
+    loss2 = tf.losses.mse(inp, x_tilde)
+    loss = 0.01*loss1+1.0*loss2
     full_model.add_loss(loss)
     # Defining a deep encoder
     if cov:
-        DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoderCov(10000, n_clusters, dissimilarity=dis)(latent)
+        assigns = DMAE.Layers.DissimilarityMixtureEncoderCov(alpha, n_clusters, dissimilarity=dis)(h)
     else:
-        DMAE_encoder = DMAE.Layers.DissimilarityMixtureEncoder(10000, n_clusters, dissimilarity=dis)(latent)
-    full_encoder = tf.keras.Model(inputs=model_in, outputs=DMAE_encoder)
-    full_encoder.layers[-1].set_weights(full_model.layers[2].get_weights())
+        assigns = DMAE.Layers.DissimilarityMixtureEncoder(alpha, n_clusters, dissimilarity=dis)(h)
+    full_encoder = tf.keras.Model(inputs=[inp], outputs=assigns)
     return full_model, full_encoder
 
 def train(ds_aug, ds_cluster, X, y, da, train_batch, test_batch, trials, make_autoencoder, make_dmae,
@@ -94,11 +86,12 @@ def train(ds_aug, ds_cluster, X, y, da, train_batch, test_batch, trials, make_au
         aris1.append(adjusted_rand_score(y, y_pred))
         
         # Defining DMAE Model
-        full_model, full_encoder = make_dmae(encoder_model, decoder_model, X_latent, pretrainer)
+        full_model, full_encoder=make_dmae(encoder_model, decoder_model, X_latent, pretrainer)
         full_model.compile(optimizer=cluster_optimizer["type"](**cluster_optimizer["params"]))
         # Training the full model
         full_model.fit(ds_cluster, **cluster_params)
         # Clustering evaluation
+        full_encoder.layers[2].set_weights(full_model.layers[2].get_weights())
         preds = full_encoder.predict(X, steps=test_batch, verbose=False)
         # Obtaning the assigned clusters
         y_pred = np.argmax(preds, axis=1)

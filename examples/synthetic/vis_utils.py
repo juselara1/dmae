@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Implementation of: Dissimilarity Mixture Autoencoder (DMAE) for Deep Clustering.
 
@@ -67,10 +68,8 @@ def visualize_distribution(autoencoder, dis_loss, alpha, X, encoder=None, cov=Fa
         h = X2
     else:
         h = encoder.predict(X2)
-    if cov:
-        vals = tf.exp(-alpha*dis_loss(h, *theta_tilde)).numpy()
-    else:
-        vals = tf.exp(-alpha*dis_loss(h, theta_tilde)).numpy()
+    vals = np.array([tf.exp(-dis_loss(h_i, *theta_tilde, alpha)).numpy() for h_i in h])
+    
     fig, ax = plt.subplots(1, 1, figsize=figsize)
     vals = vals.reshape(A.shape)
     ax.imshow(vals, interpolation='nearest', extent=(x.min(), x.max(), y.min(), y.max()),

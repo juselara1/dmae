@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Implementation of: Dissimilarity Mixture Autoencoder (DMAE) for Deep Clustering.
 
@@ -7,7 +8,6 @@ Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/l
 """
 
 import tensorflow as tf
-import numpy as np
 from DMAE import Dissimilarities
 
 class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
@@ -30,29 +30,36 @@ class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
     
     def __init__(self, alpha, n_clusters, dissimilarity=Dissimilarities.euclidean, trainable={"centers": True, "mixers":False},
                  initializers={"centers": tf.keras.initializers.RandomUniform(-1,1),
-                               "mixers": tf.keras.initializers.Constant(1.0)}, **kwargs):
+                               "mixers": tf.keras.initializers.Constant(1.0)},
+                 regularizers={"centers": None,
+                               "mixers": None}, **kwargs):
         self.__alpha = tf.constant(alpha, dtype=tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
         self.__initializers = initializers
+        self.__regularizers = regularizers
         super(DissimilarityMixtureAutoencoder, self).__init__(**kwargs)
         
     def call(self, x):
         """Forward pass in DMAE"""
         
         D = self.__dissimilarity(x, self.centers) # Compute pairwise dissimilarities
-        assigns = tf.nn.softmax(-self.__alpha*D+tf.math.log(tf.nn.relu(self.mixers))) # Soft-assignments
+        assigns = tf.nn.softmax(-self.__alpha*D+tf.math.log(tf.math.abs(self.mixers))) # Soft-assignments
         mu_tilde = tf.matmul(assigns, self.centers) # Reconstruction of the assigned mean.
-        return mu_tilde
+        pi_tilde = tf.reduce_sum(assigns*self.mixers, axis=1)
+        return mu_tilde, pi_tilde
     
     def build(self, input_shape):
         """Defines and initializes each parameter"""
         
         self.centers = self.add_weight(name='centers', initializer=self.__initializers["centers"],
-                                     shape=(self.__n_clusters, input_shape[1]), trainable=self.__trainable["centers"])
+                                       shape=(self.__n_clusters, input_shape[1]),
+                                       trainable=self.__trainable["centers"],
+                                       regularizer=self.__regularizers["centers"])
         self.mixers = self.add_weight(name='mixers', initializer=self.__initializers["mixers"],
-                                     shape=(1, self.__n_clusters), trainable=self.__trainable["mixers"])
+                                     shape=(1, self.__n_clusters), trainable=self.__trainable["mixers"],
+                                     regularizer=self.__regularizers["mixers"])
         super(DissimilarityMixtureAutoencoder, self).build(input_shape)
 
 class DissimilarityMixtureEncoder(tf.keras.layers.Layer):
@@ -98,7 +105,7 @@ class DissimilarityMixtureEncoder(tf.keras.layers.Layer):
         self.mixers = self.add_weight(name='mixers', initializer=self.__initializers["mixers"],
                                      shape=(1, self.__n_clusters), trainable=self.__trainable["mixers"])
         super(DissimilarityMixtureEncoder, self).build(input_shape)
-        
+
 class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
     """
     A tf.keras layer that contains the Dissimilarity Mixture Autoencoder with Covariance Matrices.
@@ -121,8 +128,12 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
     
     def __init__(self, alpha, n_clusters, dissimilarity=Dissimilarities.mahalanobis,
                  trainable={"centers": True, "cov":True, "mixers":True},
-                 initializers={"centers":tf.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1),
-                               "mixers":tf.keras.initializers.Constant(1.0)}, grad_modifier=1, **kwargs):
+                 initializers={"centers": tf.keras.initializers.RandomUniform(-1, 1),
+                               "cov": tf.keras.initializers.RandomUniform(-1, 1),
+                               "mixers": tf.keras.initializers.Constant(1.0)}, grad_modifier=1,
+                 regularizers={"centers": None,
+                               "cov": None,
+                               "mixers": None}, **kwargs):
         self.__alpha = tf.constant(alpha, dtype=tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
@@ -149,7 +160,8 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
         assigns = tf.nn.softmax(-self.__alpha*D+bias) # Soft-assignments
         mu_hat = tf.matmul(assigns, self.centers) # Reconstruction of the assigned mean.
         Cov_hat = tf.tensordot(assigns, cov, axes=[[1], [0]]) # Reconstruction of the assigned covariance.
-        return mu_hat, Cov_hat
+        pi_tilde = tf.reduce_sum(assigns*self.mixers, axis=1)
+        return mu_hat, Cov_hat, pi_tilde
     
     def build(self, input_shape):
         """Defines and initializes each parameter"""
@@ -161,7 +173,7 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
         self.mixers = self.add_weight(name='mixers', initializer=self.__initializers["mixers"],
                                       shape=(1, self.__n_clusters), trainable=self.__trainable["mixers"])
         super(DissimilarityMixtureAutoencoderCov, self).build(input_shape)
-        
+
 class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
     """
     A tf.keras layer that contains the Dissimilarity Mixture Encoder with Covariance Matrices.
@@ -222,7 +234,7 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
         self.mixers = self.add_weight(name='mixers', initializer=self.__initializers["mixers"],
                                      shape=(1, self.__n_clusters), trainable=self.__trainable["mixers"])
         super(DissimilarityMixtureEncoderCov, self).build(input_shape)
-    
+
 class layers():
     def __init__(self):
         self.DissimilarityMixtureAutoencoder = DissimilarityMixtureAutoencoder

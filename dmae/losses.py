@@ -143,14 +143,3 @@ def mahalanobis_loss_decomp(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
     diff = tf.expand_dims(X-mu_tilde, axis=1)
     return tf.reduce_sum(tf.squeeze(tf.matmul(tf.matmul(diff, cov), tf.transpose(diff, perm = [0, 2, 1])))\
                          -tf.math.log(pi_tilde)/alpha)
-
-class losses():
-    def __init__(self):
-        self.euclidean_loss = euclidean_loss
-        self.cosine_loss = cosine_loss
-        self.manhattan_loss =manhattan_loss
-        self.minkowsky_loss = minkowsky_loss
-        self.correlation_loss = correlation_loss
-        self.mahalanobis_loss = mahalanobis_loss
-        self.chebyshev_loss = chebyshev_loss
-        self.mahalanobis_loss_decomp = mahalanobis_loss_decomp

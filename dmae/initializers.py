@@ -8,7 +8,7 @@ Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/l
 
 import numpy as np
 import tensorflow as tf
-from DMAE import Dissimilarities
+from dmae import dissimilarities
 from sklearn.cluster import KMeans
 
 class InitPlusPlus(tf.keras.initializers.Initializer):
@@ -20,14 +20,14 @@ class InitPlusPlus(tf.keras.initializers.Initializer):
             Input data.
         n_clusters: int
             Number of clusters.
-        dissimilarity: function, default: DMAE.Dissimilarities.euclidean
+        dissimilarity: function, default: dmae.dissimilarities.euclidean
             A tensorflow function that computes a paiwise dissimilarity function between a batch
             of points and the cluster's parameters (means and covariances).
         iters: int, default: 100
             Number of interations to run the K-means++ initialization.
     """
     
-    def __init__(self, X, n_clusters, dissimilarity=Dissimilarities.euclidean, iters=100):
+    def __init__(self, X, n_clusters, dissimilarity=dissimilarities.euclidean, iters=100):
         self.__X = X
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
@@ -118,10 +118,3 @@ class InitKMeansCov(tf.keras.initializers.Initializer):
             clus_points = self.__X[preds==i]
             res.append(np.expand_dims(np.linalg.cholesky(np.linalg.inv(np.cov(clus_points.T))), axis=0))
         return tf.cast(np.concatenate(res, axis=0), dtype)
-        
-class initializers():
-    def __init__(self):
-        self.InitPlusPlus = InitPlusPlus
-        self.InitKMeans = InitKMeans
-        self.InitIdentityCov = InitIdentityCov
-        self.InitKMeansCov = InitKMeansCov

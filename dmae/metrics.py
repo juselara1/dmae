@@ -44,8 +44,3 @@ def L0_norm(preds, thr=1e-7):
     
     counts = (preds>thr).astype("float32").sum(axis=1)
     return counts
-
-class metrics():
-    def __init__(self):
-        self.unsupervised_classification_accuracy = unsupervised_classification_accuracy
-        self.L0_norm = L0_norm

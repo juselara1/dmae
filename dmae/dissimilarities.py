@@ -138,13 +138,3 @@ def mahalanobis(X, Y, cov):
         return tf.squeeze(tf.reduce_sum(tf.matmul(cov, diff)*diff, axis=1))
     Z = tf.vectorized_map(func, X)
     return Z
-
-class dissimilarities():
-    def __init__(self):
-        self.euclidean = euclidean
-        self.cosine = cosine
-        self.correlation = correlation
-        self.manhattan = manhattan
-        self.minkowsky = minkowsky
-        self.chebyshev = chebyshev
-        self.mahalanobis = mahalanobis

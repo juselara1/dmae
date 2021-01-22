@@ -8,8 +8,7 @@ Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/l
 """
 
 import tensorflow as tf
-from DMAE import Dissimilarities
-
+from dmae import dissimilarities
 
 class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
     """
@@ -20,7 +19,7 @@ class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
             Softmax inverse temperature (sparsity control).
         n_clusters: int
             Number of clusters.
-        dissimilarity: function, default: DMAE.Dissimilarities.euclidean
+        dissimilarity: function, default: DMAE.dissimilarities.euclidean
             A tensorflow function that computes a paiwise dissimilarity function between a batch
             of points and the cluster's parameters (means).
         trainable: dict, default: {"centers": True, "mixers":False}
@@ -33,7 +32,7 @@ class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
         self,
         alpha,
         n_clusters,
-        dissimilarity=Dissimilarities.euclidean,
+        dissimilarity=dissimilarities.euclidean,
         trainable={"centers": True, "mixers": False},
         initializers={
             "centers": tf.keras.initializers.RandomUniform(-1, 1),
@@ -92,7 +91,7 @@ class DissimilarityMixtureEncoder(tf.keras.layers.Layer):
             Softmax inverse temperature (sparsity control).
         n_clusters: int
             Number of clusters.
-        dissimilarity: function, default: DMAE.Dissimilarities.euclidean
+        dissimilarity: function, default: DMAE.dissimilarities.euclidean
             A tensorflow function that computes a paiwise dissimilarity function between a batch
             of points and the cluster's parameters (means).
         trainable: dict, default: {"centers": True, "mixers":False}
@@ -105,7 +104,7 @@ class DissimilarityMixtureEncoder(tf.keras.layers.Layer):
         self,
         alpha,
         n_clusters,
-        dissimilarity=Dissimilarities.euclidean,
+        dissimilarity=dissimilarities.euclidean,
         trainable={"centers": True, "mixers": False},
         initializers={
             "centers": tf.keras.initializers.RandomUniform(-1, 1),
@@ -156,7 +155,7 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
             Softmax inverse temperature (sparsity control).
         n_clusters: int
             Number of clusters.
-        dissimilarity: function, default: DMAE.Dissimilarities.mahalanobis
+        dissimilarity: function, default: DMAE.dissimilarities.mahalanobis
             A tensorflow function that computes a paiwise dissimilarity function between a batch
             of points and the cluster's parameters (means and covariances).
         trainable: dict, default: {"centers": True, "cov": True, "mixers":False}
@@ -171,7 +170,7 @@ class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
         self,
         alpha,
         n_clusters,
-        dissimilarity=Dissimilarities.mahalanobis,
+        dissimilarity=dissimilarities.mahalanobis,
         trainable={"centers": True, "cov": True, "mixers": True},
         initializers={
             "centers": tf.keras.initializers.RandomUniform(-1, 1),
@@ -258,7 +257,7 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
             Softmax inverse temperature (sparsity control).
         n_clusters: int
             Number of clusters.
-        dissimilarity: function, default: DMAE.Dissimilarities.mahalanobis
+        dissimilarity: function, default: DMAE.dissimilarities.mahalanobis
             A tensorflow function that computes a paiwise dissimilarity function between a batch
             of points and the cluster's parameters (means and covariances).
         trainable: dict, default: {"centers": True, "cov": True, "mixers":False}
@@ -273,7 +272,7 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
         self,
         alpha,
         n_clusters,
-        dissimilarity=Dissimilarities.mahalanobis,
+        dissimilarity=dissimilarities.mahalanobis,
         trainable={"centers": True, "cov": True, "mixers": True},
         initializers={
             "centers": tf.initializers.RandomUniform(-1, 1),
@@ -337,11 +336,3 @@ class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
             trainable=self.__trainable["mixers"],
         )
         super(DissimilarityMixtureEncoderCov, self).build(input_shape)
-
-
-class layers:
-    def __init__(self):
-        self.DissimilarityMixtureAutoencoder = DissimilarityMixtureAutoencoder
-        self.DissimilarityMixtureEncoder = DissimilarityMixtureEncoder
-        self.DissimilarityMixtureAutoencoderCov = DissimilarityMixtureAutoencoderCov
-        self.DissimilarityMixtureEncoderCov = DissimilarityMixtureEncoderCov

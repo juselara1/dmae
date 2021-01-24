@@ -1,145 +1,203 @@
 # -*- coding: utf-8 -*-
 """
-Implementation of: Dissimilarity Mixture Autoencoder (DMAE) for Deep Clustering.
-
-**This package contains the tensorflow implementation of different loss functions for each dissimilarity that are required in DMAE.**
-
-Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/larajuse>
+The :mod:`dmae.losses` module implements several loss functions for each
+dissimilarity in :mod:`dmae.dissimilarities`.
 """
+# Author: Juan S. Lara <julara@unal.edu.co>
+# License: MIT
 
-import tensorflow as tf
+import tensorflow as _tf
 
 def euclidean_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Euclidean loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
+
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
     """
     
-    return tf.reduce_sum(tf.sqrt(tf.reduce_sum((X-mu_tilde)**2, axis=1))-tf.math.log(pi_tilde)/alpha)
+    return _tf.reduce_sum(
+            _tf.sqrt(
+                _tf.reduce_sum(
+                    (X-mu_tilde)**2,
+                    axis=1
+                    )
+                ) - _tf.math.log(pi_tilde)/alpha
+            )
 
 def cosine_loss(X, mu_tilde, pi_tilde, alpha):
     """
-    Computes the Cosine loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
-    """
-    
-    X_norm = tf.nn.l2_normalize(X, axis=1)
-    mu_tilde_norm = tf.nn.l2_normalize(mu_tilde, axis=1)
-    return tf.reduce_sum((1-tf.reduce_sum(X_norm*mu_tilde_norm, axis=1))-tf.math.log(pi_tilde)/alpha)
+    Computes the cosine loss.
 
-def correlation_loss(X, mu_tilde, pi_tilde, alpha):
-    """
-    Computes the Correlation loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
-    """
-    
-    centered_X = X-tf.reshape(tf.reduce_mean(X, axis=0),(1, -1))
-    centered_mu_tilde = mu_tilde-tf.reshape(tf.reduce_mean(mu_tilde, axis=1), (-1,1))
-    return cosine_loss(centered_X, centered_mu_tilde, pi_tilde, alpha)
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
+    """   
+
+    X_norm = _tf.nn.l2_normalize(X, axis=1)
+    mu_tilde_norm = _tf.nn.l2_normalize(mu_tilde, axis=1)
+    return _tf.reduce_sum(
+            (1-_tf.reduce_sum(
+                X_norm*mu_tilde_norm,
+                axis=1
+                )
+                ) - _tf.math.log(pi_tilde)/alpha
+            )
 
 def manhattan_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Manhattan loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
+
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
     """
-    
-    return tf.reduce_sum(tf.reduce_sum(tf.abs(X-mu_tilde), axis=1)-tf.math.log(pi_tilde)/alpha)
+    return _tf.reduce_sum(
+            _tf.reduce_sum(
+                _tf.abs(X-mu_tilde), 
+                axis=1
+                ) - _tf.math.log(pi_tilde)/alpha
+            )
 
 def minkowsky_loss(X, mu_tilde, pi_tilde, alpha, p):
     """
-    Computes the Manhattan loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-        p: float
-            Order of the Minkowski distance.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
-    """
-    
-    return tf.reduce_sum(tf.reduce_sum(tf.abs(X-mu_tilde)**p, axis=1)**(1/p)-tf.math.log(pi_tilde)/alpha)
+    Computes the Minkowsky loss.
 
-def chebyshev_loss(X, mu_tilde, pi_tilde, alpha, p):
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+    p: float
+        Order of the Minkowsky distance
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
+    """
+
+
+    if p>1:
+        return _tf.reduce_sum(
+                _tf.reduce_sum(
+                    _tf.abs(X-mu_tilde)**p,
+                    axis=1
+                    )**(1/p) - _tf.math.log(pi_tilde)/alpha
+                )
+    else:
+        return _tf.reduce_sum(
+                _tf.reduce_sum(
+                    _tf.abs(X-mu_tilde)**p,
+                    axis=1
+                    ) - _tf.math.log(pi_tilde)/alpha
+                )
+
+def chebyshev_loss(X, mu_tilde, pi_tilde, alpha):
     """
     Computes the Chebyshev loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
+
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
     """
-    
-    return tf.reduce_sum(tf.reduce_max(tf.abs(X-mu_tilde), axis=1)-tf.math.log(pi_tilde)/alpha)
+
+    return _tf.reduce_sum(
+            _tf.reduce_max(
+                _tf.abs(X-mu_tilde),
+                axis=1
+                ) - _tf.math.log(pi_tilde)/alpha
+            )
 
 def mahalanobis_loss(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
     """
     Computes the Mahalanobis loss.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-        Cov_tilde: array-like, shape=(batch_size, n_features, n_features)
-            Tensor with the assigned covariances.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
-    """
-    
-    diff = tf.expand_dims(X-mu_tilde, axis=1)
-    return tf.reduce_sum(tf.squeeze(tf.matmul(tf.matmul(diff, Cov_tilde), tf.transpose(diff, perm = [0, 2, 1])))\
-                         -tf.math.log(pi_tilde)/alpha)
 
-def mahalanobis_loss_decomp(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    Cov_tilde: array-like, shape=(batch_size, n_features, n_features)
+        Tensor with the assigned covariances.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
     """
-    Computes the Mahalanobis loss using the decomposition of the covariance matrices.
-    Arguments:
-        X: array-like, shape=(batch_size, n_features)
-            Input batch matrix.
-        mu_tilde: array-like, shape=(batch_size, n_features)
-            Matrix in which each row represents the assigned mean vector.
-        Cov_tilde: array-like, shape=(batch_size, n_features, n_features)
-            Tensor with the assigned decomposition.
-    Returns:
-        loss: array-like, shape=(batch_size, )
-            Computed loss for each sample.
-    """
-    
-    cov = tf.matmul(Cov_tilde, tf.transpose(Cov_tilde, [0, 2, 1]))
-    diff = tf.expand_dims(X-mu_tilde, axis=1)
-    return tf.reduce_sum(tf.squeeze(tf.matmul(tf.matmul(diff, cov), tf.transpose(diff, perm = [0, 2, 1])))\
-                         -tf.math.log(pi_tilde)/alpha)
+   
+    diff = _tf.expand_dims(X-mu_tilde, axis=1)
+    return _tf.reduce_sum(
+            _tf.squeeze(
+                _tf.matmul(
+                    _tf.matmul(
+                        diff,
+                        Cov_tilde
+                        ),
+                    _tf.transpose(
+                        diff,
+                        perm = [0, 2, 1]
+                        )
+                    )
+                )-_tf.math.log(pi_tilde)/alpha
+            )

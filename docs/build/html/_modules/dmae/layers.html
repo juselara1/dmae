@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>dmae.layers &mdash; dmae 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> dmae
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dmae</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">dmae</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>dmae.layers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dmae.layers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The :mod:`dmae.layers` module implements the dissimilarity mixture autoencoder (DMAE) layers as</span>
+<span class="sd">tensorflow keras layers. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Author: Juan S. Lara &lt;julara@unal.edu.co&gt;</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">_tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Layer</span> <span class="k">as</span> <span class="n">_Layer</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.initializers</span> <span class="kn">import</span> <span class="n">RandomUniform</span> <span class="k">as</span> <span class="n">_RandomUniform</span><span class="p">,</span> <span class="n">Constant</span> <span class="k">as</span> <span class="n">_Constant</span>
+<span class="kn">from</span> <span class="nn">dmae</span> <span class="kn">import</span> <span class="n">dissimilarities</span> <span class="k">as</span> <span class="n">_dissimilarities</span>
+
+<div class="viewcode-block" id="DissimilarityMixtureAutoencoder"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureAutoencoder">[docs]</a><span class="k">class</span> <span class="nc">DissimilarityMixtureAutoencoder</span><span class="p">(</span><span class="n">_Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A :mod:`tf.keras` layer with the Dissimilarity Mixture Autoencoder (DMAE).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Softmax inverse temperature.</span>
+<span class="sd">    n_clusters : int</span>
+<span class="sd">        Number of clusters.</span>
+<span class="sd">    dissimilarity : function, default = :mod:`dmae.dissimilarities.euclidean`</span>
+<span class="sd">        A tensorflow function that computes a pairwise dissimilarity function</span>
+<span class="sd">        between a batch of points and the cluster&#39;s parameters.</span>
+<span class="sd">    trainable : dict, default = {&quot;centers&quot;: True, &quot;mixers&quot;: True}</span>
+<span class="sd">        Specifies which parameters are trainable.</span>
+<span class="sd">    initializers : dict, default = {&quot;centers&quot;: :mod:`RandomUniform(-1, 1)`, &quot;mixers&quot;: :mod:`Constant(1.0)`}</span>
+<span class="sd">        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.</span>
+<span class="sd">    regularizers : dict, default = {&quot;centers&quot;: None, &quot;mixers&quot;: None}</span>
+<span class="sd">        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
+            <span class="n">dissimilarity</span><span class="o">=</span><span class="n">_dissimilarities</span><span class="o">.</span><span class="n">euclidean</span><span class="p">,</span>
+            <span class="n">trainable</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+            <span class="n">initializers</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="n">_RandomUniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="n">_Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="p">},</span>
+            <span class="n">regularizers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span> <span class="o">=</span> <span class="n">dissimilarity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span> <span class="o">=</span> <span class="n">initializers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span> <span class="o">=</span> <span class="n">regularizers</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureAutoencoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DissimilarityMixtureAutoencoder.call"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureAutoencoder.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass in DMAE.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array_like</span>
+<span class="sd">            Input tensor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mu_tilde : array_like</span>
+<span class="sd">            Soft-assigned centroids.</span>
+<span class="sd">        pi_tilde : array_like</span>
+<span class="sd">            Soft-assigned mixing coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># computes pairwise dissimilarities</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
+        <span class="c1"># computes the soft-assignements</span>
+        <span class="n">assigns</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">*</span> <span class="n">D</span> <span class="o">+</span>\
+                        <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
+                <span class="p">)</span>
+        <span class="c1"># soft-assigned centroids</span>
+        <span class="n">mu_tilde</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">assigns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
+
+        <span class="c1"># soft-assigned mixing coefficients</span>
+        <span class="n">pi_tilde</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                <span class="n">assigns</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="n">pi_tilde</span></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureAutoencoder.build"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureAutoencoder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the tensorflow variables.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_shape : tuple</span>
+<span class="sd">            Input tensor shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;centers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mixers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureAutoencoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureEncoder"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureEncoder">[docs]</a><span class="k">class</span> <span class="nc">DissimilarityMixtureEncoder</span><span class="p">(</span><span class="n">_Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A tf.keras layer that implements the dissimilarity mixture encoder (DM-Encoder).</span>
+<span class="sd">    It computes the soft assignments using a dissimilarity function from</span>
+<span class="sd">    :mod:`dmae.dissimilarities`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Softmax inverse temperature.</span>
+<span class="sd">    n_clusters : int</span>
+<span class="sd">        Number of clusters.</span>
+<span class="sd">    dissimilarity : function, default = :mod:`dmae.dissimilarities.euclidean`</span>
+<span class="sd">        A tensorflow function that computes a pairwise dissimilarity function</span>
+<span class="sd">        between a batch of points and the cluster&#39;s parameters.</span>
+<span class="sd">    trainable : dict, default = {&quot;centers&quot;: True, &quot;mixers&quot;: True}</span>
+<span class="sd">        Specifies which parameters are trainable.</span>
+<span class="sd">    initializers : dict, default = {&quot;centers&quot;: :mod:`RandomUniform(-1, 1)`, &quot;mixers&quot;: :mod:`Constant(1.0)`}</span>
+<span class="sd">        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.</span>
+<span class="sd">    regularizers : dict, default = {&quot;centers&quot;: None, &quot;mixers&quot;: None}</span>
+<span class="sd">        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
+            <span class="n">dissimilarity</span><span class="o">=</span><span class="n">_dissimilarities</span><span class="o">.</span><span class="n">euclidean</span><span class="p">,</span>
+            <span class="n">trainable</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+            <span class="n">initializers</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="n">_RandomUniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="n">_Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="p">},</span>
+            <span class="n">regularizers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span> <span class="o">=</span> <span class="n">dissimilarity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span> <span class="o">=</span> <span class="n">initializers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span> <span class="o">=</span> <span class="n">regularizers</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DissimilarityMixtureEncoder.call"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureEncoder.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass in DM-Encoder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array_like</span>
+<span class="sd">            Input tensor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        S : array_like</span>
+<span class="sd">            Soft assignments.    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># compute pairwise dissimilarities</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
+        <span class="c1"># compute the soft assignments</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">*</span> <span class="n">D</span> <span class="o">+</span>\
+                        <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
+                        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">assigns</span></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureEncoder.build"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureEncoder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the tensorflow variables.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_shape : tuple</span>
+<span class="sd">            Input tensor shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;centers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mixers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureAutoencoderCov"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureAutoencoderCov">[docs]</a><span class="k">class</span> <span class="nc">DissimilarityMixtureAutoencoderCov</span><span class="p">(</span><span class="n">_Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A :mod:`tf.keras` layer with the Dissimilarity Mixture Autoencoder (DMAE).</span>
+<span class="sd">    This layer includes a covariance parameter for dissimilarities that allow it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Softmax inverse temperature.</span>
+<span class="sd">    n_clusters : int</span>
+<span class="sd">        Number of clusters.</span>
+<span class="sd">    dissimilarity : function, default = :mod:`dmae.dissimilarities.mahalanobis`</span>
+<span class="sd">        A tensorflow function that computes a pairwise dissimilarity function</span>
+<span class="sd">        between a batch of points and the cluster&#39;s parameters.</span>
+<span class="sd">    trainable : dict, default = {&quot;centers&quot;: True, &quot;cov&quot;: True, mixers&quot;: True}</span>
+<span class="sd">        Specifies which parameters are trainable.</span>
+<span class="sd">    initializers : dict, default = {&quot;centers&quot;: :mod:`RandomUniform(-1, 1)`, &quot;cov&quot;: :mod:`RandomUniform(-1, 1)`</span>
+<span class="sd">    &quot;mixers&quot;: :mod:`Constant(1.0)`}</span>
+<span class="sd">        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.</span>
+<span class="sd">    regularizers : dict, default = {&quot;centers&quot;: None, &quot;cov&quot;: None, &quot;mixers&quot;: None}</span>
+<span class="sd">        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
+            <span class="n">dissimilarity</span><span class="o">=</span><span class="n">_dissimilarities</span><span class="o">.</span><span class="n">mahalanobis</span><span class="p">,</span>
+            <span class="n">trainable</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;cov&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">initializers</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="n">_RandomUniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;cov&quot;</span><span class="p">:</span> <span class="n">_RandomUniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="n">_Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>
+            <span class="p">},</span>
+            <span class="n">grad_modifier</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">regularizers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;cov&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span> <span class="o">=</span> <span class="n">dissimilarity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span> <span class="o">=</span> <span class="n">initializers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span> <span class="o">=</span> <span class="n">regularizers</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureAutoencoderCov</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DissimilarityMixtureAutoencoderCov.call"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureAutoencoderCov.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass in DMAE.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array_like</span>
+<span class="sd">            Input tensor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mu_tilde : array_like</span>
+<span class="sd">            Soft-assigned centroids.</span>
+<span class="sd">        Cov_hat : array_like</span>
+<span class="sd">            Soft-assigned covariance matrices.</span>
+<span class="sd">        pi_tilde : array_like</span>
+<span class="sd">            Soft-assigned mixing coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># compute PSD matrix.</span>
+        <span class="n">cov</span> <span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov</span><span class="p">,</span><span class="n">_tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="c1"># compute pairwise dissimilarities.</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">,</span> <span class="n">cov</span><span class="p">)</span>
+        <span class="c1"># compute the soft assignments.</span>
+        <span class="n">assigns</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">*</span> <span class="n">D</span> <span class="o">+</span>\
+                        <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
+                        <span class="p">)</span>
+        <span class="c1"># soft-assigned centroids</span>
+        <span class="n">mu_hat</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                <span class="n">assigns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span>
+                <span class="p">)</span>
+        <span class="c1"># soft-assigned covariance matrices</span>
+        <span class="n">Cov_hat</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span>
+                <span class="n">assigns</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="p">)</span> 
+        <span class="c1"># soft-assigned mixing coefficients</span>
+        <span class="n">pi_tilde</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                <span class="n">assigns</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mu_hat</span><span class="p">,</span> <span class="n">Cov_hat</span><span class="p">,</span> <span class="n">pi_tilde</span></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureAutoencoderCov.build"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureAutoencoderCov.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the tensorflow variables.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_shape : tuple</span>
+<span class="sd">            Input tensor shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;centers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cov&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mixers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureAutoencoderCov</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureEncoderCov"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureEncoderCov">[docs]</a><span class="k">class</span> <span class="nc">DissimilarityMixtureEncoderCov</span><span class="p">(</span><span class="n">_Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A tf.keras layer that implements the dissimilarity mixture encoder (DM-Encoder).</span>
+<span class="sd">    It computes the soft assignments using a dissimilarity function from</span>
+<span class="sd">    :mod:`dmae.dissimilarities`. This layer includes a covariance parameter for</span>
+<span class="sd">    dissimilarities that allow it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Softmax inverse temperature.</span>
+<span class="sd">    n_clusters : int</span>
+<span class="sd">        Number of clusters.</span>
+<span class="sd">    dissimilarity : function, default = :mod:`dmae.dissimilarities.mahalanobis`</span>
+<span class="sd">        A tensorflow function that computes a pairwise dissimilarity function</span>
+<span class="sd">        between a batch of points and the cluster&#39;s parameters.</span>
+<span class="sd">    trainable : dict, default = {&quot;centers&quot;: True, &quot;cov&quot;: True, mixers&quot;: True}</span>
+<span class="sd">        Specifies which parameters are trainable.</span>
+<span class="sd">    initializers : dict, default = {&quot;centers&quot;: :mod:`RandomUniform(-1, 1)`, &quot;cov&quot;: :mod:`RandomUniform(-1, 1)`</span>
+<span class="sd">    &quot;mixers&quot;: :mod:`Constant(1.0)`}</span>
+<span class="sd">        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.</span>
+<span class="sd">    regularizers : dict, default = {&quot;centers&quot;: None, &quot;cov&quot;: None, &quot;mixers&quot;: None}</span>
+<span class="sd">        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
+            <span class="n">dissimilarity</span><span class="o">=</span><span class="n">_dissimilarities</span><span class="o">.</span><span class="n">mahalanobis</span><span class="p">,</span>
+            <span class="n">trainable</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;cov&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">initializers</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="n">_RandomUniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;cov&quot;</span><span class="p">:</span> <span class="n">_RandomUniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="n">_Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>
+                <span class="p">},</span>
+            <span class="n">regularizers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;cov&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;mixers&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span> <span class="o">=</span> <span class="n">dissimilarity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span> <span class="o">=</span> <span class="n">initializers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span> <span class="o">=</span> <span class="n">regularizers</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureEncoderCov</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DissimilarityMixtureEncoderCov.call"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureEncoderCov.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass in DM-Encoder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array_like</span>
+<span class="sd">            Input tensor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        S : array_like</span>
+<span class="sd">            Soft assignments.    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># computes PSD matrix</span>
+        <span class="n">cov</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov</span><span class="p">,</span> <span class="n">_tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="c1"># computes pairwise dissimilarities.</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">,</span> <span class="n">cov</span>
+                <span class="p">)</span>
+        <span class="c1"># computes the soft assignments.</span>
+        <span class="n">assigns</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">*</span> <span class="n">D</span> <span class="o">+</span>\
+                        <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
+                        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">assigns</span></div>
+
+<div class="viewcode-block" id="DissimilarityMixtureEncoderCov.build"><a class="viewcode-back" href="../../dmae.html#dmae.layers.DissimilarityMixtureEncoderCov.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the tensorflow variables.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_shape : tuple</span>
+<span class="sd">            Input tensor shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;centers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;centers&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cov&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mixers&quot;</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__initializers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_clusters</span><span class="p">),</span>
+                <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__trainable</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">],</span>
+                <span class="n">regularizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__regularizers</span><span class="p">[</span><span class="s2">&quot;mixers&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">DissimilarityMixtureEncoderCov</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan S. Lara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

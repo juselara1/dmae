@@ -1,90 +1,154 @@
+# -*- coding: utf-8 -*-
 """
-Implementation of: Dissimilarity Mixture Autoencoder (DMAE) for Deep Clustering.
-
-**This package contains tf.keras.initializers that can be used to initialize DMAE.**
-
-Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/larajuse>
+The :mod:`dmae.initializers` module implements some initializers for DMAE.
 """
+# Author: Juan S. Lara <julara@unal.edu.co>
+# License: MIT
 
-import numpy as np
-import tensorflow as tf
-from dmae import dissimilarities
-from sklearn.cluster import KMeans
+import numpy as _np
+import tensorflow as _tf
+from tensorflow.keras.initializers import Initializer as _Initializer
+from dmae import dissimilarities as _dissimilarities
 
-class InitPlusPlus(tf.keras.initializers.Initializer):
+class InitPlusPlus(_Initializer):
     """
-    A tf.keras initializer similar to the K-Means++ initialization (Arthur, David, and Sergei Vassilvitskii. k-means++: The advantages of careful seeding. Stanford, 2006.) that allows dissimilarities.
+    A tf.keras initializer based on K-Means++ that allows dissimilarities.
     
-    Arguments:
-        X: array-like, shape=(n_samples, n_features)
-            Input data.
-        n_clusters: int
-            Number of clusters.
-        dissimilarity: function, default: dmae.dissimilarities.euclidean
-            A tensorflow function that computes a paiwise dissimilarity function between a batch
-            of points and the cluster's parameters (means and covariances).
-        iters: int, default: 100
-            Number of interations to run the K-means++ initialization.
+    Parameters
+    ----------
+    X: array-like, shape=(n_samples, n_features)
+        Input data.
+    n_clusters: int
+        Number of clusters.
+    dissimilarity: function, default: :mod:`dmae.dissimilarities.euclidean`
+        A tensorflow function that computes a paiwise dissimilarity function between a batch
+        of points and the cluster's parameters.
+    iters: int, default: 100
+        Number of interations to run the K-means++ initialization.
     """
     
-    def __init__(self, X, n_clusters, dissimilarity=dissimilarities.euclidean, iters=100):
+    def __init__(self, X, n_clusters, dissimilarity=_dissimilarities.euclidean, iters=100):
         self.__X = X
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__iters = iters
     
     def __call__(self, shape, dtype):
-        idx = np.arange(self.__X.shape[0])
-        np.random.shuffle(idx)
+        """
+        Estimates `n_clusters` using K-means++
+
+        Parameters
+        ----------
+        shape : tuple
+            Expected parameter shape.
+        dtype : str
+            Parameter's type.
+
+        Returns
+        -------
+        init_vals : array-like, shape=(n_clusters, n_features)
+            Matrix with the initial weights.
+        """
+
+        idx = _np.arange(self.__X.shape[0])
+        _np.random.shuffle(idx)
         selected = idx[:self.__n_clusters]
         init_vals = self.__X[idx[:self.__n_clusters]]
 
         for i in range(self.__iters):
-            clus_sim = self.__dissimilarity(init_vals, init_vals).numpy()
-            np.fill_diagonal(clus_sim, np.inf)
+            clus_sim = self.__dissimilarity(
+                    init_vals, 
+                    init_vals
+                    ).numpy()
 
-            candidate = self.__X[np.random.randint(self.__X.shape[0])].reshape(1, -1)
-            candidate_sims = self.__dissimilarity(candidate, init_vals).numpy().flatten()
+            _np.fill_diagonal(
+                    clus_sim, 
+                    _np.inf
+                    )
+
+            candidate = self.__X[
+                    _np.random.randint(
+                        self.__X.shape[0]
+                        )
+                    ].reshape(1, -1)
+            candidate_sims = self.__dissimilarity(
+                    candidate, 
+                    init_vals
+                    ).numpy().flatten()
+
             closest_sim = candidate_sims.min()
             closest = candidate_sims.argmin()
+
             if closest_sim>clus_sim.min():
-                replace_candidates_idx = np.array(np.unravel_index(clus_sim.argmin(), clus_sim.shape))
+                replace_candidates_idx = _np.array(
+                        _np.unravel_index(
+                            clus_sim.argmin(),
+                            clus_sim.shape
+                            )
+                        )
                 replace_candidates = init_vals[replace_candidates_idx, :]
 
-                closest_sim = self.__dissimilarity(candidate, replace_candidates).numpy().flatten()
-                replace = np.argmin(closest_sim)
+                closest_sim = self.__dissimilarity(
+                        candidate, 
+                        replace_candidates
+                        ).numpy().flatten()
+
+                replace = _np.argmin(closest_sim)
                 init_vals[replace_candidates_idx[replace]] = candidate
+
             else:
-                candidate_sims[candidate_sims.argmin()] = np.inf
+                candidate_sims[candidate_sims.argmin()] = _np.inf
                 second_closest = candidate_sims.argmin()
                 if candidate_sims[second_closest] > clus_sim[closest].min():
                     init_vals[closest] = candidate
-        return tf.cast(init_vals, dtype)
 
-class InitKMeans(tf.keras.initializers.Initializer):
+        return _tf.cast(init_vals, dtype)
+
+class InitKMeans(_Initializer):
     """
-    A tf.keras initializer to assign the clusters from a sklearn's KMeans model to DMAE.
+    A tf.keras initializer to assign the clusters from a sklearn's KMeans model.
     
-    Arguments:
-        kmeans_model: sklearn.cluster.KMeans
-            Pretrained KMeans model to initialize DMAE.
+    Parameters
+    ----------
+    kmeans_model: :mod:`sklearn.cluster.KMeans`
+        Pretrained KMeans model to initialize DMAE.
     """
-    
+
     def __init__(self, kmeans_model):
         self.__kmeans = kmeans_model
         
     def __call__(self, shape, dtype):
-        return tf.cast(self.__kmeans.cluster_centers_, dtype)
+        """
+        Converts KMeans centroids into tensors.
+
+        Parameters
+        ----------
+        shape : tuple
+            Expected parameter shape.
+        dtype : str
+            Parameter's type.
+
+        Returns
+        -------
+        init_vals : array-like, shape=(n_clusters, n_features)
+            Matrix with the initial weights.
+        """
+
+        return _tf.cast(
+                self.__kmeans.cluster_centers_,
+                dtype
+                )
     
-class InitIdentityCov(tf.keras.initializers.Initializer):
+class InitIdentityCov(_Initializer):
     """
-    A tf.keras initializer to assign identity matrices to covariances in DMAE.
+    A tf.keras initializer to assign identity matrices to the covariance parameters. 
     
-    Arguments:
-        X: array-like, shape=(n_samples, n_features)
-            Input data.
-        n_clusters: int
-            Number of clusters.
+    Parameters
+    ----------
+    X: array-like, shape=(n_samples, n_features)
+        Input data.
+    n_clusters: int
+        Number of clusters.
     """
     
     def __init__(self, X, n_clusters):
@@ -92,29 +156,76 @@ class InitIdentityCov(tf.keras.initializers.Initializer):
         self.__n_clusters = n_clusters
     
     def __call__(self, shape, dtype):
-        return tf.eye(self.__X.shape[1], batch_shape=[self.__n_clusters])
+        """
+        Generates identity matrices for the given shape and type.
+
+        Parameters
+        ----------
+        shape : tuple
+            Expected parameter shape.
+        dtype : str
+            Parameter's type.
+
+        Returns
+        -------
+        init_vals : array-like, shape=(n_clusters, n_features)
+            Matrix with the initial weights.
+        """
+
+        return _tf.eye(self.__X.shape[1], batch_shape=[self.__n_clusters])
         
-class InitKMeansCov(tf.keras.initializers.Initializer):
+class InitKMeansCov(_Initializer):
     """
-    A tf.keras initializer to compute covariance matrices from K-means assignments to initialize DMAE.
+    A tf.keras initializer to compute covariance matrices from K-means.
     
-    Arguments:
-        kmeans_model: sklearn.cluster.KMeans
-            Pretrained KMeans model to initialize DMAE.
-        X: array-like, shape=(n_samples, n_features)
-            Input data.
-        n_clusters: int
-            Number of clusters.
+    Parameters
+    ----------
+    kmeans_model: :mod:`sklearn.cluster.KMeans`
+        Pretrained KMeans model to initialize DMAE.
+    X: array-like, shape=(n_samples, n_features)
+        Input data.
+    n_clusters: int
+        Number of clusters.
     """
+
     def __init__(self, kmeans_model, X, n_clusters):
         self.__kmeans_model = kmeans_model
         self.__X = X
         self.__n_clusters = n_clusters
     
     def __call__(self, shape, dtype):
+        """
+        Computes covariance matrices from the KMeans predictions.
+
+        Parameters
+        ----------
+        shape : tuple
+            Expected parameter shape.
+        dtype : str
+            Parameter's type.
+
+        Returns
+        -------
+        init_vals : array-like, shape=(n_clusters, n_features)
+            Matrix with the initial weights.
+        """
+
         res = []
         preds = self.__kmeans_model.predict(self.__X)
         for i in range(self.__n_clusters):
             clus_points = self.__X[preds==i]
-            res.append(np.expand_dims(np.linalg.cholesky(np.linalg.inv(np.cov(clus_points.T))), axis=0))
-        return tf.cast(np.concatenate(res, axis=0), dtype)
+            res.append(
+                    _np.expand_dims(
+                        _np.linalg.cholesky(
+                            _np.linalg.inv(
+                                _np.cov(clus_points.T)
+                                )
+                            ),
+                        axis=0
+                        )
+                    )
+
+        return _tf.cast(
+                _np.concatenate(res, axis=0), 
+                dtype
+                )

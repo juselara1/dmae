@@ -1,0 +1,1585 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>dmae package &mdash; dmae 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="dmae" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> dmae
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">dmae</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">dmae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dmae.dissimilarities">dmae.dissimilarities module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dmae.initializers">dmae.initializers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dmae.layers">dmae.layers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dmae.losses">dmae.losses module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dmae.metrics">dmae.metrics module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dmae">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">dmae</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">dmae</a> &raquo;</li>
+        
+      <li>dmae package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/dmae.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dmae-package">
+<h1>dmae package<a class="headerlink" href="#dmae-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dmae.dissimilarities">
+<span id="dmae-dissimilarities-module"></span><h2>dmae.dissimilarities module<a class="headerlink" href="#module-dmae.dissimilarities" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-dmae.dissimilarities" title="dmae.dissimilarities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities</span></code></a> module implements several dissimilarity functions
+in tensorflow.</p>
+<dl class="py function">
+<dt id="dmae.dissimilarities.chebyshev">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">chebyshev</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#chebyshev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.chebyshev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a pairwise Chevyshev distance between two matrices:
+<span class="math notranslate nohighlight">\(\max{(|\mathbf{x}_i-\mathbf{y}_j|)}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_clusters, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.dissimilarities.cosine">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">cosine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#cosine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.cosine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a pairwise cosine distance between two matrices:
+<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_clusters, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.dissimilarities.euclidean">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">euclidean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#euclidean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.euclidean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a pairwise Euclidean distance between two matrices:
+<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_clusters, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.dissimilarities.mahalanobis">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">mahalanobis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">cov</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#mahalanobis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.mahalanobis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a pairwise Mahalanobis distance: <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_features, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+<dt><strong>cov: array-like, shape=(n_clusters, n_features, n_features)</strong></dt><dd><p>3D Tensor with the inverse covariance matrices of all the clusters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.dissimilarities.manhattan">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">manhattan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#manhattan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.manhattan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a pairwise Manhattan distance between two matrices:
+<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_clusters, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.dissimilarities.minkowsky">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">minkowsky</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#minkowsky"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.minkowsky" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a pairwise Minkowsky distance between two matrices:
+<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_clusters, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">float</span></dt><dd><p>Order of the Minkowsky distance.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dmae.initializers">
+<span id="dmae-initializers-module"></span><h2>dmae.initializers module<a class="headerlink" href="#module-dmae.initializers" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-dmae.initializers" title="dmae.initializers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.initializers</span></code></a> module implements some initializers for DMAE.</p>
+<dl class="py class">
+<dt id="dmae.initializers.InitIdentityCov">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.initializers.</code><code class="sig-name descname">InitIdentityCov</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">n_clusters</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/initializers.html#InitIdentityCov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.initializers.InitIdentityCov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.initializers.initializers_v2.Initializer</span></code></p>
+<p>A tf.keras initializer to assign identity matrices to the covariance parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(n_samples, n_features)</strong></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>n_clusters: int</strong></dt><dd><p>Number of clusters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(shape, dtype)</p></td>
+<td><p>Generates identity matrices for the given shape and type.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Instantiates an initializer from a configuration dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the configuration of the initializer as a JSON-serializable dict.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py class">
+<dt id="dmae.initializers.InitKMeans">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.initializers.</code><code class="sig-name descname">InitKMeans</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kmeans_model</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/initializers.html#InitKMeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.initializers.InitKMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.initializers.initializers_v2.Initializer</span></code></p>
+<p>A tf.keras initializer to assign the clusters from a sklearn’s KMeans model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>kmeans_model: :mod:`sklearn.cluster.KMeans`</strong></dt><dd><p>Pretrained KMeans model to initialize DMAE.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(shape, dtype)</p></td>
+<td><p>Converts KMeans centroids into tensors.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Instantiates an initializer from a configuration dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the configuration of the initializer as a JSON-serializable dict.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py class">
+<dt id="dmae.initializers.InitKMeansCov">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.initializers.</code><code class="sig-name descname">InitKMeansCov</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kmeans_model</span></em>, <em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">n_clusters</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/initializers.html#InitKMeansCov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.initializers.InitKMeansCov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.initializers.initializers_v2.Initializer</span></code></p>
+<p>A tf.keras initializer to compute covariance matrices from K-means.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>kmeans_model: :mod:`sklearn.cluster.KMeans`</strong></dt><dd><p>Pretrained KMeans model to initialize DMAE.</p>
+</dd>
+<dt><strong>X: array-like, shape=(n_samples, n_features)</strong></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>n_clusters: int</strong></dt><dd><p>Number of clusters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(shape, dtype)</p></td>
+<td><p>Computes covariance matrices from the KMeans predictions.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Instantiates an initializer from a configuration dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the configuration of the initializer as a JSON-serializable dict.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py class">
+<dt id="dmae.initializers.InitPlusPlus">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.initializers.</code><code class="sig-name descname">InitPlusPlus</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">n_clusters</em>, <em class="sig-param">dissimilarity=&lt;function euclidean&gt;</em>, <em class="sig-param">iters=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/initializers.html#InitPlusPlus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.initializers.InitPlusPlus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.initializers.initializers_v2.Initializer</span></code></p>
+<p>A tf.keras initializer based on K-Means++ that allows dissimilarities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(n_samples, n_features)</strong></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>n_clusters: int</strong></dt><dd><p>Number of clusters.</p>
+</dd>
+<dt><strong>dissimilarity: function, default: :mod:`dmae.dissimilarities.euclidean`</strong></dt><dd><p>A tensorflow function that computes a paiwise dissimilarity function between a batch
+of points and the cluster’s parameters.</p>
+</dd>
+<dt><strong>iters: int, default: 100</strong></dt><dd><p>Number of interations to run the K-means++ initialization.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(shape, dtype)</p></td>
+<td><p>Estimates <cite>n_clusters</cite> using K-means++</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Instantiates an initializer from a configuration dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the configuration of the initializer as a JSON-serializable dict.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dmae.layers">
+<span id="dmae-layers-module"></span><h2>dmae.layers module<a class="headerlink" href="#module-dmae.layers" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-dmae.layers" title="dmae.layers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.layers</span></code></a> module implements the dissimilarity mixture autoencoder (DMAE) layers as
+tensorflow keras layers.</p>
+<dl class="py class">
+<dt id="dmae.layers.DissimilarityMixtureAutoencoder">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.layers.</code><code class="sig-name descname">DissimilarityMixtureAutoencoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureAutoencoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureAutoencoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span></code></p>
+<p>A <code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras</span></code> layer with the Dissimilarity Mixture Autoencoder (DMAE).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+<dt><strong>n_clusters</strong><span class="classifier">int</span></dt><dd><p>Number of clusters.</p>
+</dd>
+<dt><strong>dissimilarity</strong><span class="classifier">function, default = <a class="reference internal" href="#dmae.dissimilarities.euclidean" title="dmae.dissimilarities.euclidean"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities.euclidean</span></code></a></span></dt><dd><p>A tensorflow function that computes a pairwise dissimilarity function
+between a batch of points and the cluster’s parameters.</p>
+</dd>
+<dt><strong>trainable</strong><span class="classifier">dict, default = {“centers”: True, “mixers”: True}</span></dt><dd><p>Specifies which parameters are trainable.</p>
+</dd>
+<dt><strong>initializers</strong><span class="classifier">dict, default = {“centers”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">RandomUniform(-1,</span> <span class="pre">1)</span></code>, “mixers”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">Constant(1.0)</span></code>}</span></dt><dd><p>Specifies a keras initializer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.initializers</span></code>) for each  parameter.</p>
+</dd>
+<dt><strong>regularizers</strong><span class="classifier">dict, default = {“centers”: None, “mixers”: None}</span></dt><dd><p>Specifies a keras regularizer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.regularizers</span></code>) for each parameter.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity_regularizer</span></code></dt><dd><p>Optional regularizer function for the output of this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_dtype</span></code></dt><dd><p>The dtype of the layer’s computations.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></dt><dd><p>The dtype of the layer weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype_policy</span></code></dt><dd><p>The dtype policy associated with this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic</span></code></dt><dd><p>Whether the layer is dynamic (eager-only); set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">inbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code></dt><dd><p>Retrieves the input tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_mask</span></code></dt><dd><p>Retrieves the input mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_shape</span></code></dt><dd><p>Retrieves the input shape(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></dt><dd><p><cite>InputSpec</cite> instance(s) describing the input format for this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">losses</span></code></dt><dd><p>List of losses added using the <cite>add_loss()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></dt><dd><p>List of metrics added using the <cite>add_metric()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of the layer (string), set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_scope</span></code></dt><dd><p>Returns a <cite>tf.name_scope</cite> instance for this class.</p>
+</dd>
+<dt><strong>non_trainable_variables</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">non_trainable_weights</span></code></dt><dd><p>List of all non-trainable weights tracked by this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">outbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output</span></code></dt><dd><p>Retrieves the output tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_mask</span></code></dt><dd><p>Retrieves the output mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_shape</span></code></dt><dd><p>Retrieves the output shape(s) of a layer.</p>
+</dd>
+<dt><strong>stateful</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">submodules</span></code></dt><dd><p>Sequence of all sub-modules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">supports_masking</span></code></dt><dd><p>Whether this layer supports computing a mask using <cite>compute_mask</cite>.</p>
+</dd>
+<dt><strong>trainable</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></dt><dd><p>Sequence of trainable variables owned by this module and its submodules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_weights</span></code></dt><dd><p>List of all trainable weights tracked by this layer.</p>
+</dd>
+<dt><strong>updates</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variable_dtype</span></code></dt><dd><p>Alias of <cite>Layer.dtype</cite>, the dtype of the weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*args, **kwargs)</p></td>
+<td><p>Wraps <cite>call</cite>, applying pre- and post-processing steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_loss</span></code>(losses, **kwargs)</p></td>
+<td><p>Add loss tensor(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_metric</span></code>(value[, name])</p></td>
+<td><p>Adds metric tensor to the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_update</span></code>(updates[, inputs])</p></td>
+<td><p>Add update op(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_variable</span></code>(*args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use! Alias for <cite>add_weight</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_weight</span></code>([name, shape, dtype, …])</p></td>
+<td><p>Adds a new variable to the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(inputs, *args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureAutoencoder.build" title="dmae.layers.DissimilarityMixtureAutoencoder.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(input_shape)</p></td>
+<td><p>Builds the tensorflow variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureAutoencoder.call" title="dmae.layers.DissimilarityMixtureAutoencoder.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a>(x)</p></td>
+<td><p>Forward pass in DMAE.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask</span></code>(inputs[, mask])</p></td>
+<td><p>Computes an output mask tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_shape</span></code>(input_shape)</p></td>
+<td><p>Computes the output shape of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_signature</span></code>(input_signature)</p></td>
+<td><p>Compute the output tensor signature of the layer based on the inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_params</span></code>()</p></td>
+<td><p>Count the total number of scalars composing the weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Creates a layer from its config.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the config of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_losses_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_updates_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weights</span></code>()</p></td>
+<td><p>Returns the current weights of the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weights</span></code>(weights)</p></td>
+<td><p>Sets the weights of the layer, from Numpy arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_name_scope</span></code>(method)</p></td>
+<td><p>Decorator to automatically enter the module name scope.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureAutoencoder.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureAutoencoder.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureAutoencoder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the tensorflow variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>input_shape</strong><span class="classifier">tuple</span></dt><dd><p>Input tensor shape.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureAutoencoder.call">
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureAutoencoder.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureAutoencoder.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward pass in DMAE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>Input tensor.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>mu_tilde</strong><span class="classifier">array_like</span></dt><dd><p>Soft-assigned centroids.</p>
+</dd>
+<dt><strong>pi_tilde</strong><span class="classifier">array_like</span></dt><dd><p>Soft-assigned mixing coefficients.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="dmae.layers.DissimilarityMixtureAutoencoderCov">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.layers.</code><code class="sig-name descname">DissimilarityMixtureAutoencoderCov</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureAutoencoderCov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureAutoencoderCov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span></code></p>
+<p>A <code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras</span></code> layer with the Dissimilarity Mixture Autoencoder (DMAE).
+This layer includes a covariance parameter for dissimilarities that allow it.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+<dt><strong>n_clusters</strong><span class="classifier">int</span></dt><dd><p>Number of clusters.</p>
+</dd>
+<dt><strong>dissimilarity</strong><span class="classifier">function, default = <a class="reference internal" href="#dmae.dissimilarities.mahalanobis" title="dmae.dissimilarities.mahalanobis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities.mahalanobis</span></code></a></span></dt><dd><p>A tensorflow function that computes a pairwise dissimilarity function
+between a batch of points and the cluster’s parameters.</p>
+</dd>
+<dt><strong>trainable</strong><span class="classifier">dict, default = {“centers”: True, “cov”: True, mixers”: True}</span></dt><dd><p>Specifies which parameters are trainable.</p>
+</dd>
+<dt><strong>initializers</strong><span class="classifier">dict, default = {“centers”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">RandomUniform(-1,</span> <span class="pre">1)</span></code>, “cov”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">RandomUniform(-1,</span> <span class="pre">1)</span></code></span></dt><dd></dd>
+<dt><strong>“mixers”: :mod:`Constant(1.0)`}</strong></dt><dd><p>Specifies a keras initializer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.initializers</span></code>) for each  parameter.</p>
+</dd>
+<dt><strong>regularizers</strong><span class="classifier">dict, default = {“centers”: None, “cov”: None, “mixers”: None}</span></dt><dd><p>Specifies a keras regularizer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.regularizers</span></code>) for each parameter.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity_regularizer</span></code></dt><dd><p>Optional regularizer function for the output of this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_dtype</span></code></dt><dd><p>The dtype of the layer’s computations.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></dt><dd><p>The dtype of the layer weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype_policy</span></code></dt><dd><p>The dtype policy associated with this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic</span></code></dt><dd><p>Whether the layer is dynamic (eager-only); set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">inbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code></dt><dd><p>Retrieves the input tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_mask</span></code></dt><dd><p>Retrieves the input mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_shape</span></code></dt><dd><p>Retrieves the input shape(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></dt><dd><p><cite>InputSpec</cite> instance(s) describing the input format for this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">losses</span></code></dt><dd><p>List of losses added using the <cite>add_loss()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></dt><dd><p>List of metrics added using the <cite>add_metric()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of the layer (string), set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_scope</span></code></dt><dd><p>Returns a <cite>tf.name_scope</cite> instance for this class.</p>
+</dd>
+<dt><strong>non_trainable_variables</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">non_trainable_weights</span></code></dt><dd><p>List of all non-trainable weights tracked by this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">outbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output</span></code></dt><dd><p>Retrieves the output tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_mask</span></code></dt><dd><p>Retrieves the output mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_shape</span></code></dt><dd><p>Retrieves the output shape(s) of a layer.</p>
+</dd>
+<dt><strong>stateful</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">submodules</span></code></dt><dd><p>Sequence of all sub-modules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">supports_masking</span></code></dt><dd><p>Whether this layer supports computing a mask using <cite>compute_mask</cite>.</p>
+</dd>
+<dt><strong>trainable</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></dt><dd><p>Sequence of trainable variables owned by this module and its submodules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_weights</span></code></dt><dd><p>List of all trainable weights tracked by this layer.</p>
+</dd>
+<dt><strong>updates</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variable_dtype</span></code></dt><dd><p>Alias of <cite>Layer.dtype</cite>, the dtype of the weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*args, **kwargs)</p></td>
+<td><p>Wraps <cite>call</cite>, applying pre- and post-processing steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_loss</span></code>(losses, **kwargs)</p></td>
+<td><p>Add loss tensor(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_metric</span></code>(value[, name])</p></td>
+<td><p>Adds metric tensor to the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_update</span></code>(updates[, inputs])</p></td>
+<td><p>Add update op(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_variable</span></code>(*args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use! Alias for <cite>add_weight</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_weight</span></code>([name, shape, dtype, …])</p></td>
+<td><p>Adds a new variable to the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(inputs, *args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureAutoencoderCov.build" title="dmae.layers.DissimilarityMixtureAutoencoderCov.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(input_shape)</p></td>
+<td><p>Builds the tensorflow variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureAutoencoderCov.call" title="dmae.layers.DissimilarityMixtureAutoencoderCov.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a>(x)</p></td>
+<td><p>Forward pass in DMAE.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask</span></code>(inputs[, mask])</p></td>
+<td><p>Computes an output mask tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_shape</span></code>(input_shape)</p></td>
+<td><p>Computes the output shape of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_signature</span></code>(input_signature)</p></td>
+<td><p>Compute the output tensor signature of the layer based on the inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_params</span></code>()</p></td>
+<td><p>Count the total number of scalars composing the weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Creates a layer from its config.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the config of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_losses_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_updates_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weights</span></code>()</p></td>
+<td><p>Returns the current weights of the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weights</span></code>(weights)</p></td>
+<td><p>Sets the weights of the layer, from Numpy arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_name_scope</span></code>(method)</p></td>
+<td><p>Decorator to automatically enter the module name scope.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureAutoencoderCov.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureAutoencoderCov.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureAutoencoderCov.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the tensorflow variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>input_shape</strong><span class="classifier">tuple</span></dt><dd><p>Input tensor shape.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureAutoencoderCov.call">
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureAutoencoderCov.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureAutoencoderCov.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward pass in DMAE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>Input tensor.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>mu_tilde</strong><span class="classifier">array_like</span></dt><dd><p>Soft-assigned centroids.</p>
+</dd>
+<dt><strong>Cov_hat</strong><span class="classifier">array_like</span></dt><dd><p>Soft-assigned covariance matrices.</p>
+</dd>
+<dt><strong>pi_tilde</strong><span class="classifier">array_like</span></dt><dd><p>Soft-assigned mixing coefficients.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="dmae.layers.DissimilarityMixtureEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.layers.</code><code class="sig-name descname">DissimilarityMixtureEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span></code></p>
+<p>A tf.keras layer that implements the dissimilarity mixture encoder (DM-Encoder).
+It computes the soft assignments using a dissimilarity function from
+<a class="reference internal" href="#module-dmae.dissimilarities" title="dmae.dissimilarities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities</span></code></a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+<dt><strong>n_clusters</strong><span class="classifier">int</span></dt><dd><p>Number of clusters.</p>
+</dd>
+<dt><strong>dissimilarity</strong><span class="classifier">function, default = <a class="reference internal" href="#dmae.dissimilarities.euclidean" title="dmae.dissimilarities.euclidean"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities.euclidean</span></code></a></span></dt><dd><p>A tensorflow function that computes a pairwise dissimilarity function
+between a batch of points and the cluster’s parameters.</p>
+</dd>
+<dt><strong>trainable</strong><span class="classifier">dict, default = {“centers”: True, “mixers”: True}</span></dt><dd><p>Specifies which parameters are trainable.</p>
+</dd>
+<dt><strong>initializers</strong><span class="classifier">dict, default = {“centers”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">RandomUniform(-1,</span> <span class="pre">1)</span></code>, “mixers”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">Constant(1.0)</span></code>}</span></dt><dd><p>Specifies a keras initializer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.initializers</span></code>) for each  parameter.</p>
+</dd>
+<dt><strong>regularizers</strong><span class="classifier">dict, default = {“centers”: None, “mixers”: None}</span></dt><dd><p>Specifies a keras regularizer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.regularizers</span></code>) for each parameter.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity_regularizer</span></code></dt><dd><p>Optional regularizer function for the output of this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_dtype</span></code></dt><dd><p>The dtype of the layer’s computations.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></dt><dd><p>The dtype of the layer weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype_policy</span></code></dt><dd><p>The dtype policy associated with this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic</span></code></dt><dd><p>Whether the layer is dynamic (eager-only); set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">inbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code></dt><dd><p>Retrieves the input tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_mask</span></code></dt><dd><p>Retrieves the input mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_shape</span></code></dt><dd><p>Retrieves the input shape(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></dt><dd><p><cite>InputSpec</cite> instance(s) describing the input format for this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">losses</span></code></dt><dd><p>List of losses added using the <cite>add_loss()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></dt><dd><p>List of metrics added using the <cite>add_metric()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of the layer (string), set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_scope</span></code></dt><dd><p>Returns a <cite>tf.name_scope</cite> instance for this class.</p>
+</dd>
+<dt><strong>non_trainable_variables</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">non_trainable_weights</span></code></dt><dd><p>List of all non-trainable weights tracked by this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">outbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output</span></code></dt><dd><p>Retrieves the output tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_mask</span></code></dt><dd><p>Retrieves the output mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_shape</span></code></dt><dd><p>Retrieves the output shape(s) of a layer.</p>
+</dd>
+<dt><strong>stateful</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">submodules</span></code></dt><dd><p>Sequence of all sub-modules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">supports_masking</span></code></dt><dd><p>Whether this layer supports computing a mask using <cite>compute_mask</cite>.</p>
+</dd>
+<dt><strong>trainable</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></dt><dd><p>Sequence of trainable variables owned by this module and its submodules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_weights</span></code></dt><dd><p>List of all trainable weights tracked by this layer.</p>
+</dd>
+<dt><strong>updates</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variable_dtype</span></code></dt><dd><p>Alias of <cite>Layer.dtype</cite>, the dtype of the weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*args, **kwargs)</p></td>
+<td><p>Wraps <cite>call</cite>, applying pre- and post-processing steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_loss</span></code>(losses, **kwargs)</p></td>
+<td><p>Add loss tensor(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_metric</span></code>(value[, name])</p></td>
+<td><p>Adds metric tensor to the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_update</span></code>(updates[, inputs])</p></td>
+<td><p>Add update op(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_variable</span></code>(*args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use! Alias for <cite>add_weight</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_weight</span></code>([name, shape, dtype, …])</p></td>
+<td><p>Adds a new variable to the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(inputs, *args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureEncoder.build" title="dmae.layers.DissimilarityMixtureEncoder.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(input_shape)</p></td>
+<td><p>Builds the tensorflow variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureEncoder.call" title="dmae.layers.DissimilarityMixtureEncoder.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a>(x)</p></td>
+<td><p>Forward pass in DM-Encoder.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask</span></code>(inputs[, mask])</p></td>
+<td><p>Computes an output mask tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_shape</span></code>(input_shape)</p></td>
+<td><p>Computes the output shape of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_signature</span></code>(input_signature)</p></td>
+<td><p>Compute the output tensor signature of the layer based on the inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_params</span></code>()</p></td>
+<td><p>Count the total number of scalars composing the weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Creates a layer from its config.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the config of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_losses_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_updates_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weights</span></code>()</p></td>
+<td><p>Returns the current weights of the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weights</span></code>(weights)</p></td>
+<td><p>Sets the weights of the layer, from Numpy arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_name_scope</span></code>(method)</p></td>
+<td><p>Decorator to automatically enter the module name scope.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureEncoder.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureEncoder.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureEncoder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the tensorflow variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>input_shape</strong><span class="classifier">tuple</span></dt><dd><p>Input tensor shape.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureEncoder.call">
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureEncoder.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureEncoder.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward pass in DM-Encoder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>Input tensor.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>S</strong><span class="classifier">array_like</span></dt><dd><p>Soft assignments.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="dmae.layers.DissimilarityMixtureEncoderCov">
+<em class="property">class </em><code class="sig-prename descclassname">dmae.layers.</code><code class="sig-name descname">DissimilarityMixtureEncoderCov</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureEncoderCov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureEncoderCov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span></code></p>
+<p>A tf.keras layer that implements the dissimilarity mixture encoder (DM-Encoder).
+It computes the soft assignments using a dissimilarity function from
+<a class="reference internal" href="#module-dmae.dissimilarities" title="dmae.dissimilarities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities</span></code></a>. This layer includes a covariance parameter for
+dissimilarities that allow it.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+<dt><strong>n_clusters</strong><span class="classifier">int</span></dt><dd><p>Number of clusters.</p>
+</dd>
+<dt><strong>dissimilarity</strong><span class="classifier">function, default = <a class="reference internal" href="#dmae.dissimilarities.mahalanobis" title="dmae.dissimilarities.mahalanobis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities.mahalanobis</span></code></a></span></dt><dd><p>A tensorflow function that computes a pairwise dissimilarity function
+between a batch of points and the cluster’s parameters.</p>
+</dd>
+<dt><strong>trainable</strong><span class="classifier">dict, default = {“centers”: True, “cov”: True, mixers”: True}</span></dt><dd><p>Specifies which parameters are trainable.</p>
+</dd>
+<dt><strong>initializers</strong><span class="classifier">dict, default = {“centers”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">RandomUniform(-1,</span> <span class="pre">1)</span></code>, “cov”: <code class="xref py py-mod docutils literal notranslate"><span class="pre">RandomUniform(-1,</span> <span class="pre">1)</span></code></span></dt><dd></dd>
+<dt><strong>“mixers”: :mod:`Constant(1.0)`}</strong></dt><dd><p>Specifies a keras initializer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.initializers</span></code>) for each  parameter.</p>
+</dd>
+<dt><strong>regularizers</strong><span class="classifier">dict, default = {“centers”: None, “cov”: None, “mixers”: None}</span></dt><dd><p>Specifies a keras regularizer (<code class="xref py py-mod docutils literal notranslate"><span class="pre">tf.keras.regularizers</span></code>) for each parameter.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity_regularizer</span></code></dt><dd><p>Optional regularizer function for the output of this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_dtype</span></code></dt><dd><p>The dtype of the layer’s computations.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></dt><dd><p>The dtype of the layer weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype_policy</span></code></dt><dd><p>The dtype policy associated with this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic</span></code></dt><dd><p>Whether the layer is dynamic (eager-only); set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">inbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code></dt><dd><p>Retrieves the input tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_mask</span></code></dt><dd><p>Retrieves the input mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_shape</span></code></dt><dd><p>Retrieves the input shape(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></dt><dd><p><cite>InputSpec</cite> instance(s) describing the input format for this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">losses</span></code></dt><dd><p>List of losses added using the <cite>add_loss()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></dt><dd><p>List of metrics added using the <cite>add_metric()</cite> API.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of the layer (string), set in the constructor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_scope</span></code></dt><dd><p>Returns a <cite>tf.name_scope</cite> instance for this class.</p>
+</dd>
+<dt><strong>non_trainable_variables</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">non_trainable_weights</span></code></dt><dd><p>List of all non-trainable weights tracked by this layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">outbound_nodes</span></code></dt><dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output</span></code></dt><dd><p>Retrieves the output tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_mask</span></code></dt><dd><p>Retrieves the output mask tensor(s) of a layer.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_shape</span></code></dt><dd><p>Retrieves the output shape(s) of a layer.</p>
+</dd>
+<dt><strong>stateful</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">submodules</span></code></dt><dd><p>Sequence of all sub-modules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">supports_masking</span></code></dt><dd><p>Whether this layer supports computing a mask using <cite>compute_mask</cite>.</p>
+</dd>
+<dt><strong>trainable</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_variables</span></code></dt><dd><p>Sequence of trainable variables owned by this module and its submodules.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_weights</span></code></dt><dd><p>List of all trainable weights tracked by this layer.</p>
+</dd>
+<dt><strong>updates</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variable_dtype</span></code></dt><dd><p>Alias of <cite>Layer.dtype</cite>, the dtype of the weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span></code></dt><dd><p>Returns the list of all layer variables/weights.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*args, **kwargs)</p></td>
+<td><p>Wraps <cite>call</cite>, applying pre- and post-processing steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_loss</span></code>(losses, **kwargs)</p></td>
+<td><p>Add loss tensor(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_metric</span></code>(value[, name])</p></td>
+<td><p>Adds metric tensor to the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_update</span></code>(updates[, inputs])</p></td>
+<td><p>Add update op(s), potentially dependent on layer inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_variable</span></code>(*args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use! Alias for <cite>add_weight</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_weight</span></code>([name, shape, dtype, …])</p></td>
+<td><p>Adds a new variable to the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(inputs, *args, **kwargs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureEncoderCov.build" title="dmae.layers.DissimilarityMixtureEncoderCov.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(input_shape)</p></td>
+<td><p>Builds the tensorflow variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dmae.layers.DissimilarityMixtureEncoderCov.call" title="dmae.layers.DissimilarityMixtureEncoderCov.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a>(x)</p></td>
+<td><p>Forward pass in DM-Encoder.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask</span></code>(inputs[, mask])</p></td>
+<td><p>Computes an output mask tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_shape</span></code>(input_shape)</p></td>
+<td><p>Computes the output shape of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_output_signature</span></code>(input_signature)</p></td>
+<td><p>Compute the output tensor signature of the layer based on the inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_params</span></code>()</p></td>
+<td><p>Count the total number of scalars composing the weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config)</p></td>
+<td><p>Creates a layer from its config.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<td><p>Returns the config of the layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the input shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_losses_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_mask_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output mask tensor(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape_at</span></code>(node_index)</p></td>
+<td><p>Retrieves the output shape(s) of a layer at a given node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_updates_for</span></code>(inputs)</p></td>
+<td><p>Deprecated, do NOT use!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weights</span></code>()</p></td>
+<td><p>Returns the current weights of the layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weights</span></code>(weights)</p></td>
+<td><p>Sets the weights of the layer, from Numpy arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_name_scope</span></code>(method)</p></td>
+<td><p>Decorator to automatically enter the module name scope.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureEncoderCov.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureEncoderCov.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureEncoderCov.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the tensorflow variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>input_shape</strong><span class="classifier">tuple</span></dt><dd><p>Input tensor shape.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dmae.layers.DissimilarityMixtureEncoderCov.call">
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/layers.html#DissimilarityMixtureEncoderCov.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.layers.DissimilarityMixtureEncoderCov.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward pass in DM-Encoder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>Input tensor.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>S</strong><span class="classifier">array_like</span></dt><dd><p>Soft assignments.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-dmae.losses">
+<span id="dmae-losses-module"></span><h2>dmae.losses module<a class="headerlink" href="#module-dmae.losses" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-dmae.losses" title="dmae.losses"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.losses</span></code></a> module implements several loss functions for each
+dissimilarity in <a class="reference internal" href="#module-dmae.dissimilarities" title="dmae.dissimilarities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.dissimilarities</span></code></a>.</p>
+<dl class="py function">
+<dt id="dmae.losses.chebyshev_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">chebyshev_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">mu_tilde</span></em>, <em class="sig-param"><span class="n">pi_tilde</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#chebyshev_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.chebyshev_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Chebyshev loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.losses.cosine_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">cosine_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">mu_tilde</span></em>, <em class="sig-param"><span class="n">pi_tilde</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#cosine_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.cosine_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the cosine loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.losses.euclidean_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">euclidean_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">mu_tilde</span></em>, <em class="sig-param"><span class="n">pi_tilde</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#euclidean_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.euclidean_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Euclidean loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.losses.mahalanobis_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">mahalanobis_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">mu_tilde</span></em>, <em class="sig-param"><span class="n">Cov_tilde</span></em>, <em class="sig-param"><span class="n">pi_tilde</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#mahalanobis_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.mahalanobis_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Mahalanobis loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>Cov_tilde: array-like, shape=(batch_size, n_features, n_features)</strong></dt><dd><p>Tensor with the assigned covariances.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.losses.manhattan_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">manhattan_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">mu_tilde</span></em>, <em class="sig-param"><span class="n">pi_tilde</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#manhattan_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.manhattan_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Manhattan loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.losses.minkowsky_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">minkowsky_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">mu_tilde</span></em>, <em class="sig-param"><span class="n">pi_tilde</span></em>, <em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#minkowsky_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.minkowsky_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Minkowsky loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+<dt><strong>p: float</strong></dt><dd><p>Order of the Minkowsky distance</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dmae.metrics">
+<span id="dmae-metrics-module"></span><h2>dmae.metrics module<a class="headerlink" href="#module-dmae.metrics" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-dmae.metrics" title="dmae.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dmae.metrics</span></code></a> module implements some evaluation metrics that are used
+in the paper.</p>
+<dl class="py function">
+<dt id="dmae.metrics.unsupervised_classification_accuracy">
+<code class="sig-prename descclassname">dmae.metrics.</code><code class="sig-name descname">unsupervised_classification_accuracy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_true</span></em>, <em class="sig-param"><span class="n">y_pred</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/metrics.html#unsupervised_classification_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.metrics.unsupervised_classification_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scipy-based implementation of the unsupervised classification accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y_true: array-like, shape=(n_samples, )</strong></dt><dd><p>Array with the Ground truth labels.</p>
+</dd>
+<dt><strong>y_pred: array-like, shape=(n_samples, )</strong></dt><dd><p>Array with the predicted labels.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>uacc: float</dt><dd><p>Unsupervised classification accuracy between y_true and y_pred.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.metrics.zero_norm">
+<code class="sig-prename descclassname">dmae.metrics.</code><code class="sig-name descname">zero_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">preds</span></em>, <em class="sig-param"><span class="n">thr</span><span class="o">=</span><span class="default_value">1e-07</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/metrics.html#zero_norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.metrics.zero_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numpy implementation of the L0 norm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>preds: array-like, shape=(n_samples, n_clusters)</strong></dt><dd><p>Soft-assignments extracted from a DM-Encoder</p>
+</dd>
+<dt><strong>thr: float</strong></dt><dd><p>Threshold used to compute the L0 norm.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>L0: float</dt><dd><p>L0 norm of the soft-assignments.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dmae">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dmae" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="modules.html" class="btn btn-neutral float-left" title="dmae" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan S. Lara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

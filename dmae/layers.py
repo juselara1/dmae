@@ -1,47 +1,51 @@
 # -*- coding: utf-8 -*-
 """
-Implementation of: Dissimilarity Mixture Autoencoder (DMAE) for Deep Clustering.
-
-**This package contains different tf.keras layers that are required to build the DMAE model.**
-
-Author: Juan Sebastián Lara Ramírez <julara@unal.edu.co> <https://github.com/larajuse>
+The :mod:`dmae.layers` module implements the dissimilarity mixture autoencoder (DMAE) layers as
+tensorflow keras layers. 
 """
 
-import tensorflow as tf
-from dmae import dissimilarities
+# Author: Juan S. Lara <julara@unal.edu.co>
+# License: MIT
 
-class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
+import tensorflow as _tf
+from tensorflow.keras.layers import Layer as _Layer
+from tensorflow.keras.initializers import RandomUniform as _RandomUniform, Constant as _Constant
+from dmae import dissimilarities as _dissimilarities
+
+class DissimilarityMixtureAutoencoder(_Layer):
     """
-    A tf.keras layer that contains the Dissimilarity Mixture Autoencoder.
+    A :mod:`tf.keras` layer with the Dissimilarity Mixture Autoencoder (DMAE).
 
-    Arguments:
-        alpha: float
-            Softmax inverse temperature (sparsity control).
-        n_clusters: int
-            Number of clusters.
-        dissimilarity: function, default: DMAE.dissimilarities.euclidean
-            A tensorflow function that computes a paiwise dissimilarity function between a batch
-            of points and the cluster's parameters (means).
-        trainable: dict, default: {"centers": True, "mixers":False}
-            A dictionary of bool variables to specify which parameters must be trained.
-        initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
-            A dictionary with tf.keras.initializers to initialize each parameter.
+    Parameters
+    ----------
+    alpha : float
+        Softmax inverse temperature.
+    n_clusters : int
+        Number of clusters.
+    dissimilarity : function, default = :mod:`dmae.dissimilarities.euclidean`
+        A tensorflow function that computes a pairwise dissimilarity function
+        between a batch of points and the cluster's parameters.
+    trainable : dict, default = {"centers": True, "mixers": True}
+        Specifies which parameters are trainable.
+    initializers : dict, default = {"centers": :mod:`RandomUniform(-1, 1)`, "mixers": :mod:`Constant(1.0)`}
+        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.
+    regularizers : dict, default = {"centers": None, "mixers": None}
+        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.
     """
 
     def __init__(
-        self,
-        alpha,
-        n_clusters,
-        dissimilarity=dissimilarities.euclidean,
-        trainable={"centers": True, "mixers": False},
-        initializers={
-            "centers": tf.keras.initializers.RandomUniform(-1, 1),
-            "mixers": tf.keras.initializers.Constant(1.0),
-        },
-        regularizers={"centers": None, "mixers": None},
-        **kwargs
-    ):
-        self.__alpha = tf.constant(alpha, dtype=tf.float32)
+            self, alpha, n_clusters,
+            dissimilarity=_dissimilarities.euclidean,
+            trainable={"centers": True, "mixers": False},
+            initializers={
+                "centers": _RandomUniform(-1, 1),
+                "mixers": _Constant(1.0)
+                },
+            regularizers={"centers": None, "mixers": None},
+            **kwargs
+            ):
+
+        self.__alpha = _tf.constant(alpha, dtype=_tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
@@ -50,289 +54,394 @@ class DissimilarityMixtureAutoencoder(tf.keras.layers.Layer):
         super(DissimilarityMixtureAutoencoder, self).__init__(**kwargs)
 
     def call(self, x):
-        """Forward pass in DMAE"""
+        """
+        Forward pass in DMAE.
 
-        D = self.__dissimilarity(x, self.centers)  # Compute pairwise dissimilarities
-        assigns = tf.nn.softmax(
-            -self.__alpha * D + tf.math.log(tf.math.abs(self.mixers))
-        )  # Soft-assignments
-        mu_tilde = tf.matmul(
-            assigns, self.centers
-        )  # Reconstruction of the assigned mean.
-        pi_tilde = tf.reduce_sum(assigns * self.mixers, axis=1)
+        Parameters
+        ----------
+        x : array_like
+            Input tensor.
+
+        Returns
+        -------
+        mu_tilde : array_like
+            Soft-assigned centroids.
+        pi_tilde : array_like
+            Soft-assigned mixing coefficients.
+        """
+
+        # computes pairwise dissimilarities
+        D = self.__dissimilarity(x, self.centers)
+        # computes the soft-assignements
+        assigns = _tf.nn.softmax(
+                -self.__alpha * D +\
+                        _tf.math.log(_tf.math.abs(self.mixers))
+                )
+        # soft-assigned centroids
+        mu_tilde = _tf.matmul(assigns, self.centers)
+
+        # soft-assigned mixing coefficients
+        pi_tilde = _tf.reduce_sum(
+                assigns * self.mixers,
+                axis=1
+                )
+
         return mu_tilde, pi_tilde
 
     def build(self, input_shape):
-        """Defines and initializes each parameter"""
+        """
+        Builds the tensorflow variables.
+
+        Parameters
+        ----------
+        input_shape : tuple
+            Input tensor shape.
+        """
 
         self.centers = self.add_weight(
-            name="centers",
-            initializer=self.__initializers["centers"],
-            shape=(self.__n_clusters, input_shape[1]),
-            trainable=self.__trainable["centers"],
-            regularizer=self.__regularizers["centers"],
-        )
+                name="centers",
+                initializer=self.__initializers["centers"],
+                shape=(self.__n_clusters, input_shape[1]),
+                trainable=self.__trainable["centers"],
+                regularizer=self.__regularizers["centers"],
+                )
+
         self.mixers = self.add_weight(
-            name="mixers",
-            initializer=self.__initializers["mixers"],
-            shape=(1, self.__n_clusters),
-            trainable=self.__trainable["mixers"],
-            regularizer=self.__regularizers["mixers"],
-        )
+                name="mixers",
+                initializer=self.__initializers["mixers"],
+                shape=(1, self.__n_clusters),
+                trainable=self.__trainable["mixers"],
+                regularizer=self.__regularizers["mixers"],
+                )
+
         super(DissimilarityMixtureAutoencoder, self).build(input_shape)
 
-
-class DissimilarityMixtureEncoder(tf.keras.layers.Layer):
+class DissimilarityMixtureEncoder(_Layer):
     """
-    A tf.keras layer that contains the Dissimilarity Mixture Encoder.
+    A tf.keras layer that implements the dissimilarity mixture encoder (DM-Encoder).
+    It computes the soft assignments using a dissimilarity function from
+    :mod:`dmae.dissimilarities`.
 
-    Arguments:
-        alpha: float
-            Softmax inverse temperature (sparsity control).
-        n_clusters: int
-            Number of clusters.
-        dissimilarity: function, default: DMAE.dissimilarities.euclidean
-            A tensorflow function that computes a paiwise dissimilarity function between a batch
-            of points and the cluster's parameters (means).
-        trainable: dict, default: {"centers": True, "mixers":False}
-            A dictionary of bool variables to specify which parameters must be trained.
-        initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
-            A dictionary with tf.keras.initializers to initialize each parameter.
+    Parameters
+    ----------
+    alpha : float
+        Softmax inverse temperature.
+    n_clusters : int
+        Number of clusters.
+    dissimilarity : function, default = :mod:`dmae.dissimilarities.euclidean`
+        A tensorflow function that computes a pairwise dissimilarity function
+        between a batch of points and the cluster's parameters.
+    trainable : dict, default = {"centers": True, "mixers": True}
+        Specifies which parameters are trainable.
+    initializers : dict, default = {"centers": :mod:`RandomUniform(-1, 1)`, "mixers": :mod:`Constant(1.0)`}
+        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.
+    regularizers : dict, default = {"centers": None, "mixers": None}
+        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.
     """
+
 
     def __init__(
-        self,
-        alpha,
-        n_clusters,
-        dissimilarity=dissimilarities.euclidean,
-        trainable={"centers": True, "mixers": False},
-        initializers={
-            "centers": tf.keras.initializers.RandomUniform(-1, 1),
-            "mixers": tf.keras.initializers.Constant(1.0),
-        },
-        **kwargs
-    ):
-        self.__alpha = tf.constant(alpha, dtype=tf.float32)
+            self, alpha, n_clusters,
+            dissimilarity=_dissimilarities.euclidean,
+            trainable={"centers": True, "mixers": False},
+            initializers={
+                "centers": _RandomUniform(-1, 1),
+                "mixers": _Constant(1.0)
+                },
+            regularizers={"centers": None, "mixers": None},
+            **kwargs
+            ):
+        self.__alpha = _tf.constant(alpha, dtype=_tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
         self.__initializers = initializers
+        self.__regularizers = regularizers
         super(DissimilarityMixtureEncoder, self).__init__(**kwargs)
 
     def call(self, x):
-        """Forward pass in DM-Encoder"""
+        """
+        Forward pass in DM-Encoder.
 
-        D = self.__dissimilarity(x, self.centers)  # Compute pairwise dissimilarities
-        assigns = tf.nn.softmax(
-            -self.__alpha * D + tf.math.log(tf.nn.relu(self.mixers))
-        )  # Soft-assignments
+        Parameters
+        ----------
+        x : array_like
+            Input tensor.
+
+        Returns
+        -------
+        S : array_like
+            Soft assignments.    
+        """
+
+        # compute pairwise dissimilarities
+        D = self.__dissimilarity(x, self.centers)
+        # compute the soft assignments
+        S = _tf.nn.softmax(
+                -self.__alpha * D +\
+                        _tf.math.log(_tf.nn.relu(self.mixers))
+                        )
         return assigns
 
     def build(self, input_shape):
-        """Defines and initializes each parameter"""
+        """
+        Builds the tensorflow variables.
+
+        Parameters
+        ----------
+        input_shape : tuple
+            Input tensor shape.
+        """
 
         self.centers = self.add_weight(
-            name="centers",
-            initializer=self.__initializers["centers"],
-            shape=(self.__n_clusters, input_shape[1]),
-            trainable=self.__trainable["centers"],
-        )
+                name="centers",
+                initializer=self.__initializers["centers"],
+                shape=(self.__n_clusters, input_shape[1]),
+                trainable=self.__trainable["centers"],
+                regularizer=self.__regularizers["centers"]
+                )
+
         self.mixers = self.add_weight(
-            name="mixers",
-            initializer=self.__initializers["mixers"],
-            shape=(1, self.__n_clusters),
-            trainable=self.__trainable["mixers"],
-        )
+                name="mixers",
+                initializer=self.__initializers["mixers"],
+                shape=(1, self.__n_clusters),
+                trainable=self.__trainable["mixers"],
+                regularizer=self.__regularizers["mixers"]
+                )
+
         super(DissimilarityMixtureEncoder, self).build(input_shape)
 
-
-class DissimilarityMixtureAutoencoderCov(tf.keras.layers.Layer):
+class DissimilarityMixtureAutoencoderCov(_Layer):
     """
-    A tf.keras layer that contains the Dissimilarity Mixture Autoencoder with Covariance Matrices.
+    A :mod:`tf.keras` layer with the Dissimilarity Mixture Autoencoder (DMAE).
+    This layer includes a covariance parameter for dissimilarities that allow it.
 
-    Arguments:
-        alpha: float
-            Softmax inverse temperature (sparsity control).
-        n_clusters: int
-            Number of clusters.
-        dissimilarity: function, default: DMAE.dissimilarities.mahalanobis
-            A tensorflow function that computes a paiwise dissimilarity function between a batch
-            of points and the cluster's parameters (means and covariances).
-        trainable: dict, default: {"centers": True, "cov": True, "mixers":False}
-            A dictionary of bool variables to specify which parameters must be trained.
-        initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
-            A dictionary with tf.keras.initializers to initialize each parameter.
-        grad_modifier: float, default=1
-            A value that scales the gradients for the covariances matrices.
+    Parameters
+    ----------
+    alpha : float
+        Softmax inverse temperature.
+    n_clusters : int
+        Number of clusters.
+    dissimilarity : function, default = :mod:`dmae.dissimilarities.mahalanobis`
+        A tensorflow function that computes a pairwise dissimilarity function
+        between a batch of points and the cluster's parameters.
+    trainable : dict, default = {"centers": True, "cov": True, mixers": True}
+        Specifies which parameters are trainable.
+    initializers : dict, default = {"centers": :mod:`RandomUniform(-1, 1)`, "cov": :mod:`RandomUniform(-1, 1)`
+    "mixers": :mod:`Constant(1.0)`}
+        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.
+    regularizers : dict, default = {"centers": None, "cov": None, "mixers": None}
+        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.
     """
 
     def __init__(
-        self,
-        alpha,
-        n_clusters,
-        dissimilarity=dissimilarities.mahalanobis,
-        trainable={"centers": True, "cov": True, "mixers": True},
-        initializers={
-            "centers": tf.keras.initializers.RandomUniform(-1, 1),
-            "cov": tf.keras.initializers.RandomUniform(-1, 1),
-            "mixers": tf.keras.initializers.Constant(1.0),
-        },
-        grad_modifier=1,
-        regularizers={"centers": None, "cov": None, "mixers": None},
-        **kwargs
-    ):
-        self.__alpha = tf.constant(alpha, dtype=tf.float32)
+            self, alpha, n_clusters,
+            dissimilarity=_dissimilarities.mahalanobis,
+            trainable={"centers": True, "cov": True, "mixers": True},
+            initializers={
+                "centers": _RandomUniform(-1, 1),
+                "cov": _RandomUniform(-1, 1),
+                "mixers": _Constant(1.0),
+            },
+            grad_modifier=1,
+            regularizers={"centers": None, "cov": None, "mixers": None},
+            **kwargs
+            ):
+
+        self.__alpha =_tf.constant(alpha, dtype=_tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
         self.__initializers = initializers
-        self.__grad_modifier = grad_modifier
         self.__regularizers = regularizers
         super(DissimilarityMixtureAutoencoderCov, self).__init__(**kwargs)
 
-    @tf.custom_gradient
-    def __psd_matrix(self, X):
-        """Computes a positive semidefinite matrix and modifies its gradients"""
-
-        res = tf.matmul(X, tf.transpose(X, [0, 2, 1]))
-
-        def grad(dy):
-            return dy * self.__grad_modifier
-
-        return res, grad
-
     def call(self, x):
-        """Forward pass in DMAE"""
+        """
+        Forward pass in DMAE.
 
-        cov = self.__psd_matrix(self.cov)  # Defining a PSD matrix
-        D = self.__dissimilarity(
-            x, self.centers, cov
-        )  # Compute pairwise dissimilarities
-        bias = tf.math.log(
-            tf.nn.relu(self.mixers)
-        )  # Computes the bias using the mixers
-        assigns = tf.nn.softmax(-self.__alpha * D + bias)  # Soft-assignments
-        mu_hat = tf.matmul(
-            assigns, self.centers
-        )  # Reconstruction of the assigned mean.
-        Cov_hat = tf.tensordot(
-            assigns, cov, axes=[[1], [0]]
-        )  # Reconstruction of the assigned covariance.
-        pi_tilde = tf.reduce_sum(assigns * self.mixers, axis=1)
+        Parameters
+        ----------
+        x : array_like
+            Input tensor.
+
+        Returns
+        -------
+        mu_tilde : array_like
+            Soft-assigned centroids.
+        Cov_hat : array_like
+            Soft-assigned covariance matrices.
+        pi_tilde : array_like
+            Soft-assigned mixing coefficients.
+        """
+
+        # compute PSD matrix.
+        cov =_tf.matmul(self.cov,_tf.transpose(self.cov, [0, 2, 1]))
+        # compute pairwise dissimilarities.
+        D = self.__dissimilarity(x, self.centers, cov)
+        # compute the soft assignments.
+        assigns = _tf.nn.softmax(
+                -self.__alpha * D +\
+                        _tf.math.log(tf.nn.relu(self.mixers))
+                        )
+        # soft-assigned centroids
+        mu_hat = _tf.matmul(
+                assigns, self.centers
+                )
+        # soft-assigned covariance matrices
+        Cov_hat = _tf.tensordot(
+                assigns, cov, axes=[[1], [0]]
+                ) 
+        # soft-assigned mixing coefficients
+        pi_tilde = _tf.reduce_sum(
+                assigns * self.mixers,
+                axis=1
+                )
+
         return mu_hat, Cov_hat, pi_tilde
 
     def build(self, input_shape):
-        """Defines and initializes each parameter"""
+        """
+        Builds the tensorflow variables.
+
+        Parameters
+        ----------
+        input_shape : tuple
+            Input tensor shape.
+        """
 
         self.centers = self.add_weight(
-            name="centers",
-            initializer=self.__initializers["centers"],
-            shape=(self.__n_clusters, input_shape[1]),
-            trainable=self.__trainable["centers"],
-            regularizer=self.__regularizers["centers"],
-        )
+                name="centers",
+                initializer=self.__initializers["centers"],
+                shape=(self.__n_clusters, input_shape[1]),
+                trainable=self.__trainable["centers"],
+                regularizer=self.__regularizers["centers"]
+                )
+
         self.cov = self.add_weight(
-            name="cov",
-            initializer=self.__initializers["cov"],
-            shape=(self.__n_clusters, input_shape[1], input_shape[1]),
-            trainable=self.__trainable["cov"],
-            regularizer=self.__regularizers["cov"],
-        )
+                name="cov",
+                initializer=self.__initializers["cov"],
+                shape=(self.__n_clusters, input_shape[1], input_shape[1]),
+                trainable=self.__trainable["cov"],
+                regularizer=self.__regularizers["cov"]
+                )
+
         self.mixers = self.add_weight(
-            name="mixers",
-            initializer=self.__initializers["mixers"],
-            shape=(1, self.__n_clusters),
-            trainable=self.__trainable["mixers"],
-            regularizer=self.__regularizers["mixers"],
-        )
+                name="mixers",
+                initializer=self.__initializers["mixers"],
+                shape=(1, self.__n_clusters),
+                trainable=self.__trainable["mixers"],
+                regularizer=self.__regularizers["mixers"]
+                )
+
         super(DissimilarityMixtureAutoencoderCov, self).build(input_shape)
 
-
-class DissimilarityMixtureEncoderCov(tf.keras.layers.Layer):
+class DissimilarityMixtureEncoderCov(_Layer):
     """
-    A tf.keras layer that contains the Dissimilarity Mixture Encoder with Covariance Matrices.
+    A tf.keras layer that implements the dissimilarity mixture encoder (DM-Encoder).
+    It computes the soft assignments using a dissimilarity function from
+    :mod:`dmae.dissimilarities`. This layer includes a covariance parameter for
+    dissimilarities that allow it.
 
-    Arguments:
-        alpha: float
-            Softmax inverse temperature (sparsity control).
-        n_clusters: int
-            Number of clusters.
-        dissimilarity: function, default: DMAE.dissimilarities.mahalanobis
-            A tensorflow function that computes a paiwise dissimilarity function between a batch
-            of points and the cluster's parameters (means and covariances).
-        trainable: dict, default: {"centers": True, "cov": True, "mixers":False}
-            A dictionary of bool variables to specify which parameters must be trained.
-        initializers: dict, default: {"centers": tf.keras.initializers.RandomUniform(-1,1), "cov": tf.initializers.RandomUniform(-1,1), "mixers": tf.keras.initializers.Constant(1.0)}
-            A dictionary with tf.keras.initializers to initialize each parameter.
-        grad_modifier: float, default=1,
-            A value that scales the gradients for the covariances matrices.
+    Parameters
+    ----------
+    alpha : float
+        Softmax inverse temperature.
+    n_clusters : int
+        Number of clusters.
+    dissimilarity : function, default = :mod:`dmae.dissimilarities.mahalanobis`
+        A tensorflow function that computes a pairwise dissimilarity function
+        between a batch of points and the cluster's parameters.
+    trainable : dict, default = {"centers": True, "cov": True, mixers": True}
+        Specifies which parameters are trainable.
+    initializers : dict, default = {"centers": :mod:`RandomUniform(-1, 1)`, "cov": :mod:`RandomUniform(-1, 1)`
+    "mixers": :mod:`Constant(1.0)`}
+        Specifies a keras initializer (:mod:`tf.keras.initializers`) for each  parameter.
+    regularizers : dict, default = {"centers": None, "cov": None, "mixers": None}
+        Specifies a keras regularizer (:mod:`tf.keras.regularizers`) for each parameter.
     """
 
     def __init__(
-        self,
-        alpha,
-        n_clusters,
-        dissimilarity=dissimilarities.mahalanobis,
-        trainable={"centers": True, "cov": True, "mixers": True},
-        initializers={
-            "centers": tf.initializers.RandomUniform(-1, 1),
-            "cov": tf.initializers.RandomUniform(-1, 1),
-            "mixers": tf.keras.initializers.Constant(1.0),
-        },
-        grad_modifier=1,
-        **kwargs
-    ):
-        self.__alpha = tf.constant(alpha, dtype=tf.float32)
+            self, alpha, n_clusters,
+            dissimilarity=_dissimilarities.mahalanobis,
+            trainable={"centers": True, "cov": True, "mixers": True},
+            initializers={
+                "centers": _RandomUniform(-1, 1),
+                "cov": _RandomUniform(-1, 1),
+                "mixers": _Constant(1.0),
+                },
+            regularizers={"centers": None, "cov": None, "mixers": None},
+            **kwargs
+            ):
+
+        self.__alpha = _tf.constant(alpha, dtype=_tf.float32)
         self.__n_clusters = n_clusters
         self.__dissimilarity = dissimilarity
         self.__trainable = trainable
         self.__initializers = initializers
-        self.__grad_modifier = grad_modifier
+        self.__regularizers = regularizers
         super(DissimilarityMixtureEncoderCov, self).__init__(**kwargs)
 
-    @tf.custom_gradient
-    def __psd_matrix(self, X):
-        """Computes a positive semidefinite matrix and modifies its gradients"""
-
-        res = tf.matmul(X, tf.transpose(X, [0, 2, 1]))
-
-        def grad(dy):
-            return dy * self.__grad_modifier
-
-        return res, grad
-
     def call(self, x):
-        """Forward pass in DM-Encoder"""
+        """
+        Forward pass in DM-Encoder.
 
-        cov = self.__psd_matrix(self.cov)  # Defining a PSD matrix
+        Parameters
+        ----------
+        x : array_like
+            Input tensor.
+
+        Returns
+        -------
+        S : array_like
+            Soft assignments.    
+        """
+
+        # computes PSD matrix
+        cov = _tf.matmul(self.cov, _tf.transpose(self.cov, [0, 2, 1]))
+        # computes pairwise dissimilarities.
         D = self.__dissimilarity(
-            x, self.centers, cov
-        )  # Compute pairwise dissimilarities
-        bias = tf.math.log(
-            tf.nn.relu(self.mixers)
-        )  # Computes the bias using the mixers
-        assigns = tf.nn.softmax(-self.__alpha * D + bias)  # Soft-assignments
+                x, self.centers, cov
+                )
+        # computes the soft assignments.
+        assigns = _tf.nn.softmax(
+                -self.__alpha * D +\
+                        _tf.math.log(_tf.nn.relu(self.mixers))
+                        )
         return assigns
 
     def build(self, input_shape):
-        """Defines and initializes each parameter"""
+        """
+        Builds the tensorflow variables.
+
+        Parameters
+        ----------
+        input_shape : tuple
+            Input tensor shape.
+        """
 
         self.centers = self.add_weight(
-            name="centers",
-            initializer=self.__initializers["centers"],
-            shape=(self.__n_clusters, input_shape[1]),
-            trainable=self.__trainable["centers"],
-        )
+                name="centers",
+                initializer=self.__initializers["centers"],
+                shape=(self.__n_clusters, input_shape[1]),
+                trainable=self.__trainable["centers"],
+                regularizer=self.__regularizers["centers"]
+                )
+
         self.cov = self.add_weight(
-            name="cov",
-            initializer=self.__initializers["cov"],
-            shape=(self.__n_clusters, input_shape[1], input_shape[1]),
-            trainable=self.__trainable["cov"],
-        )
+                name="cov",
+                initializer=self.__initializers["cov"],
+                shape=(self.__n_clusters, input_shape[1], input_shape[1]),
+                trainable=self.__trainable["cov"],
+                regularizer=self.__regularizers["cov"]
+                )
+
         self.mixers = self.add_weight(
-            name="mixers",
-            initializer=self.__initializers["mixers"],
-            shape=(1, self.__n_clusters),
-            trainable=self.__trainable["mixers"],
-        )
+                name="mixers",
+                initializer=self.__initializers["mixers"],
+                shape=(1, self.__n_clusters),
+                trainable=self.__trainable["mixers"],
+                regularizer=self.__regularizers["mixers"]
+                )
+
         super(DissimilarityMixtureEncoderCov, self).build(input_shape)

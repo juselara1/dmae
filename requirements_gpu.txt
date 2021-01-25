@@ -1,6 +1,6 @@
 absl-py==0.11.0
 astunparse==1.6.3
-cachetools==4.2.0
+cachetools==4.2.1
 certifi==2020.12.5
 chardet==4.0.0
 flatbuffers==1.12
@@ -28,9 +28,9 @@ scipy==1.6.0
 six==1.15.0
 tensorboard==2.4.1
 tensorboard-plugin-wit==1.8.0
-tensorflow==2.4.1
 tensorflow-addons==0.12.0
 tensorflow-estimator==2.4.0
+tensorflow-gpu==2.4.1
 termcolor==1.1.0
 threadpoolctl==2.1.0
 typeguard==2.10.0

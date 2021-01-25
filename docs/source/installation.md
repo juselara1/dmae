@@ -1,6 +1,6 @@
 # Installation
 
-You can install `dmae` from PyPI using pip, installing from source or pulling a preconfigured docker image.
+You can install `dmae` from PyPI using pip, from the source [Github repository](https://github.com/juselara1/dmae) or pulling a preconfigured docker image.
 
 ## PyPI
 
@@ -10,7 +10,7 @@ To install `dmae` using pip you can run the followiing command:
 pip install dmae
 ```
 
-*(optional) If you have an environment with the nvidia drivers and CUDA, you can isntead run:*
+*(optional) If you have an environment with the nvidia drivers and CUDA, you can instead run:*
 
 ```sh
 pip install dmae-gpu

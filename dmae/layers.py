@@ -282,7 +282,7 @@ class DissimilarityMixtureAutoencoderCov(_Layer):
         # compute the soft assignments.
         assigns = _tf.nn.softmax(
                 -self.__alpha * D +\
-                        _tf.math.log(tf.nn.relu(self.mixers))
+                        _tf.math.log(_tf.nn.relu(self.mixers))
                         )
         # soft-assigned centroids
         mu_hat = _tf.matmul(

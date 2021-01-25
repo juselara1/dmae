@@ -39,13 +39,7 @@ pip install -r requirements-gpu.txt
 Finally, you can install `dmae` via setuptools
 
 ```sh
-python setup.py install
-```
-
-Or:
-
-```sh
-pip install .
+pip install --no-deps . 
 ```
 
 ## Docker

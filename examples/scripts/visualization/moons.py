@@ -15,7 +15,7 @@ from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import Constant
 
-from sklearn.datasets import make_circles
+from sklearn.datasets import make_moons
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.cluster import KMeans
 
@@ -24,26 +24,27 @@ from visutils import decision_region, probability_region, save_pdf
 if __name__ == '__main__':
     # dataset generation parameters
     n_samples = 1000
-    n_clusters = 2
     noise = 0.1
-    factor = 0.1
     random_state = 0 
 
+    # number of clusters
+    n_clusters = 2
+    
     # softmax inverse temperature
-    alpha = 50
+    alpha = 1000
 
     # pretrain parameters
     batch_size = 32
-    pretrain_epochs = 100
-    pretrain_lr = 1e-3
+    pretrain_epochs = 250
+    pretrain_lr = 1e-4
 
     # RBFSampler parameters (for pretrain)
-    gamma = 10
+    gamma = 30
     n_components = 100
 
     # dmae training parameters
-    cluster_epochs = 80
-    cluster_lr = 1e-5
+    cluster_epochs = 100
+    cluster_lr = 1e-4
 
     # loss weights
     lambda_r = 0.5
@@ -51,12 +52,11 @@ if __name__ == '__main__':
 
     # deep autoencoder parameters
     n_units = 256
-    activation = "sigmoid"
+    activation = "relu"
 
     # generate dataset
-    X, _ = make_circles(
+    X, _ = make_moons(
             n_samples, noise=noise,
-            factor=factor,
             random_state=random_state
             )
 
@@ -64,7 +64,9 @@ if __name__ == '__main__':
     rbf_feature = RBFSampler(
             gamma=gamma, 
             n_components=n_components,
+            random_state=random_state
             )
+
     X_features = rbf_feature.fit_transform(X)
 
     # deep encoder
@@ -219,5 +221,5 @@ if __name__ == '__main__':
     # save the results
     save_pdf(
             [fig1, fig2],
-            "circles.pdf"
+            "moons.pdf"
             )

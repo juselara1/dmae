@@ -177,7 +177,7 @@ class DissimilarityMixtureEncoder(_Layer):
         # compute pairwise dissimilarities
         D = self.__dissimilarity(x, self.centers)
         # compute the soft assignments
-        S = _tf.nn.softmax(
+        assigns = _tf.nn.softmax(
                 -self.__alpha * D +\
                         _tf.math.log(_tf.nn.relu(self.mixers))
                         )

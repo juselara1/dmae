@@ -7,6 +7,7 @@ dissimilarity in :mod:`dmae.dissimilarities`.
 # License: MIT
 
 import tensorflow as _tf
+import itertools as _itertools
 
 def euclidean_loss(X, mu_tilde, pi_tilde, alpha):
     """
@@ -163,7 +164,10 @@ def chebyshev_loss(X, mu_tilde, pi_tilde, alpha):
                 ) - _tf.math.log(pi_tilde)/alpha
             )
 
-def mahalanobis_loss(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
+def mahalanobis_loss(
+        X, mu_tilde, Cov_tilde, 
+        pi_tilde, alpha
+        ):
     """
     Computes the Mahalanobis loss.
 
@@ -200,4 +204,51 @@ def mahalanobis_loss(X, mu_tilde, Cov_tilde, pi_tilde, alpha):
                         )
                     )
                 )-_tf.math.log(pi_tilde)/alpha
+            )
+
+def toroidal_euclidean_loss(
+        X, mu_tilde, pi_tilde, 
+        alpha, interval=_tf.constant((2.0, 2.0))
+        ):
+    """
+    Loss for the toroidal euclidean dissimilarity.
+
+    Parameters
+    ----------
+    X: array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    mu_tilde: array-like, shape=(batch_size, n_features)
+        Matrix in which each row represents the assigned mean vector.
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+    interval : array-like, default=tf.constant((2.0, 2.0))
+        Array representing the range on each axis.
+
+    Returns
+    --------
+    loss: array-like, shape=(batch_size, )
+        Computed loss for each sample.
+
+    """
+
+    d = _tf.reduce_sum(
+            (X - mu_tilde) ** 2,
+            axis=1
+            )
+    for val in _itertools.product(
+            [0.0, 1.0, -1.0],
+            repeat=2
+            ):
+        delta = _tf.constant(val) * interval
+        d = _tf.minimum(
+                _tf.reduce_sum(
+                    (X - mu_tilde + delta) ** 2,
+                    axis=1
+                    ),
+                d
+                )
+    return _tf.reduce_sum(
+            d - _tf.math.log(pi_tilde)/alpha
             )

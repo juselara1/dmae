@@ -7,6 +7,7 @@ in tensorflow.
 # License: MIT
 
 import tensorflow as _tf
+import itertools as _itertools
 
 def euclidean(X, Y):
     """
@@ -164,3 +165,51 @@ def mahalanobis(X, Y, cov):
                 )
     Z = _tf.vectorized_map(func, X)
     return Z
+
+def toroidal_euclidean(
+        X, Y,
+        interval=_tf.constant(
+            (2.0, 2.0)
+            )
+        ):
+    """toroidal_euclidean.
+
+    Parameters
+    ----------
+    X : array-like, shape=(batch_size, n_features)
+        Input batch matrix.
+    Y : array-like, shape=(n_features, n_features)
+        Matrix in which each row represents a centroid of a cluster.
+    interval : array-like, default=tf.constant((2.0, 2.0))
+        Array representing the range on each axis.
+
+    Returns
+    -------
+    Z : array-like, shape=(batch_size, n_clusters)
+        Pairwise dissimilarity matrix.
+    """
+    def _toroidal_dis(
+            x_i, Y, 
+            interval=_tf.constant((2.0, 2.0))):
+        d = _tf.reduce_sum(
+                (x_i - Y) ** 2,
+                axis=1
+                )
+        for val in _itertools.product(
+                [0.0, 1.0, -1.0], 
+                repeat=2
+                ):
+            delta = _tf.constant(val) * interval
+            d = _tf.minimum(
+                    _tf.reduce_sum(
+                        (x_i - Y + delta) ** 2,
+                        axis=1
+                        ),
+                    d
+                    )
+        return d
+   
+    func = lambda x_i: _toroidal_dis(
+            x_i, Y, interval
+            )
+    return _tf.vectorized_map(func, X)

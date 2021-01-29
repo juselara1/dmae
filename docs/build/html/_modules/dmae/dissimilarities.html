@@ -162,11 +162,11 @@
 <span class="c1"># License: MIT</span>
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">_tf</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">_itertools</span>
 
 <div class="viewcode-block" id="euclidean"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.euclidean">[docs]</a><span class="k">def</span> <span class="nf">euclidean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes a pairwise Euclidean distance between two matrices:</span>
-<span class="sd">    :math:`\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||`</span>
+<span class="sd">    Computes a pairwise Euclidean distance between two matrices :math:`\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -189,8 +189,7 @@
 
 <div class="viewcode-block" id="cosine"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.cosine">[docs]</a><span class="k">def</span> <span class="nf">cosine</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes a pairwise cosine distance between two matrices: </span>
-<span class="sd">    :math:`\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)`</span>
+<span class="sd">    Computes a pairwise cosine distance between two matrices :math:`\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -212,8 +211,7 @@
 
 <div class="viewcode-block" id="manhattan"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.manhattan">[docs]</a><span class="k">def</span> <span class="nf">manhattan</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes a pairwise Manhattan distance between two matrices:</span>
-<span class="sd">    :math:`\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|`</span>
+<span class="sd">    Computes a pairwise Manhattan distance between two matrices :math:`\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -234,8 +232,7 @@
 
 <div class="viewcode-block" id="minkowsky"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.minkowsky">[docs]</a><span class="k">def</span> <span class="nf">minkowsky</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes a pairwise Minkowsky distance between two matrices:</span>
-<span class="sd">    :math:`\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}`</span>
+<span class="sd">    Computes a pairwise Minkowsky distance between two matrices :math:`\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -266,8 +263,7 @@
 
 <div class="viewcode-block" id="chebyshev"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.chebyshev">[docs]</a><span class="k">def</span> <span class="nf">chebyshev</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes a pairwise Chevyshev distance between two matrices:</span>
-<span class="sd">    :math:`\max{(|\mathbf{x}_i-\mathbf{y}_j|)}`</span>
+<span class="sd">    Computes a pairwise Chevyshev distance between two matrices :math:`\max{(|\mathbf{x}_i-\mathbf{y}_j|)}`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -292,7 +288,7 @@
 
 <div class="viewcode-block" id="mahalanobis"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.mahalanobis">[docs]</a><span class="k">def</span> <span class="nf">mahalanobis</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes a pairwise Mahalanobis distance: :math:`\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)`</span>
+<span class="sd">    Computes a pairwise Mahalanobis distance :math:`\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -319,6 +315,96 @@
                 <span class="p">)</span>
     <span class="n">Z</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">vectorized_map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Z</span></div>
+
+<div class="viewcode-block" id="toroidal_euclidean"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.toroidal_euclidean">[docs]</a><span class="k">def</span> <span class="nf">toroidal_euclidean</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span>
+        <span class="n">interval</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+            <span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Euclidean dissimilarity that considers circular boundaries.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape=(batch_size, n_features)</span>
+<span class="sd">        Input batch matrix.</span>
+<span class="sd">    Y : array-like, shape=(n_features, n_features)</span>
+<span class="sd">        Matrix in which each row represents a centroid of a cluster.</span>
+<span class="sd">    interval : array-like, default=tf.constant((2.0, 2.0))</span>
+<span class="sd">        Array representing the range on each axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Z : array-like, shape=(batch_size, n_clusters)</span>
+<span class="sd">        Pairwise dissimilarity matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_toroidal_dis</span><span class="p">(</span>
+            <span class="n">x_i</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> 
+            <span class="n">interval</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">x_i</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span> 
+                <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span>
+                <span class="p">):</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">*</span> <span class="n">interval</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                    <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">x_i</span> <span class="o">-</span> <span class="n">Y</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+                        <span class="p">),</span>
+                    <span class="n">d</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span>
+   
+    <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x_i</span><span class="p">:</span> <span class="n">_toroidal_dis</span><span class="p">(</span>
+            <span class="n">x_i</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">interval</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_tf</span><span class="o">.</span><span class="n">vectorized_map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="kullback_leibler"><a class="viewcode-back" href="../../dmae.html#dmae.dissimilarities.kullback_leibler">[docs]</a><span class="k">def</span> <span class="nf">kullback_leibler</span><span class="p">(</span><span class="n">loggit_P</span><span class="p">,</span> <span class="n">loggit_Q</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Kullback Leibler divergence. :math:`\sum_x P_x \log{P_x}-P_x \log{Q_x}`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    loggit_P : array-like, shape=(batch_size, n_features)</span>
+<span class="sd">        Input batch matrix of loggits.</span>
+<span class="sd">    loggit_Q : array-like, shape=(n_features, n_features)</span>
+<span class="sd">        Matrix in which each row represents the unsigned loggit of a cluster.</span>
+<span class="sd">    eps: float, default=1e-3</span>
+<span class="sd">        Hyperparameter to avoid numerical issues.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Z : array-like, shape=(batch_size, n_clusters)</span>
+<span class="sd">        Pairwise dissimilarity matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">P</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+            <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">loggit_P</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span>
+            <span class="p">)</span>
+
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+            <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">loggit_Q</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span>
+            <span class="p">)</span>
+
+    <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p_i</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                <span class="n">p_i</span><span class="p">,</span> <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_i</span><span class="p">),</span> 
+                <span class="n">transpose_b</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="p">)</span> <span class="o">-</span>\
+            <span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                <span class="n">p_i</span><span class="p">,</span> <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Q</span><span class="p">),</span>
+                <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+            <span class="p">)</span> 
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">vectorized_map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Z</span></div>
+
 </pre></div>
 
            </div>

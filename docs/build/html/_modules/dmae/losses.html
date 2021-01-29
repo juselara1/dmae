@@ -162,6 +162,7 @@
 <span class="c1"># License: MIT</span>
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">_tf</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">_itertools</span>
 
 <div class="viewcode-block" id="euclidean_loss"><a class="viewcode-back" href="../../dmae.html#dmae.losses.euclidean_loss">[docs]</a><span class="k">def</span> <span class="nf">euclidean_loss</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="n">pi_tilde</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -318,7 +319,10 @@
                 <span class="p">)</span> <span class="o">-</span> <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pi_tilde</span><span class="p">)</span><span class="o">/</span><span class="n">alpha</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="mahalanobis_loss"><a class="viewcode-back" href="../../dmae.html#dmae.losses.mahalanobis_loss">[docs]</a><span class="k">def</span> <span class="nf">mahalanobis_loss</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="n">Cov_tilde</span><span class="p">,</span> <span class="n">pi_tilde</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+<div class="viewcode-block" id="mahalanobis_loss"><a class="viewcode-back" href="../../dmae.html#dmae.losses.mahalanobis_loss">[docs]</a><span class="k">def</span> <span class="nf">mahalanobis_loss</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="n">Cov_tilde</span><span class="p">,</span> 
+        <span class="n">pi_tilde</span><span class="p">,</span> <span class="n">alpha</span>
+        <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the Mahalanobis loss.</span>
 
@@ -355,6 +359,53 @@
                         <span class="p">)</span>
                     <span class="p">)</span>
                 <span class="p">)</span><span class="o">-</span><span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pi_tilde</span><span class="p">)</span><span class="o">/</span><span class="n">alpha</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="toroidal_euclidean_loss"><a class="viewcode-back" href="../../dmae.html#dmae.losses.toroidal_euclidean_loss">[docs]</a><span class="k">def</span> <span class="nf">toroidal_euclidean_loss</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="n">pi_tilde</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">((</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))</span>
+        <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loss for the toroidal euclidean dissimilarity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X: array-like, shape=(batch_size, n_features)</span>
+<span class="sd">        Input batch matrix.</span>
+<span class="sd">    mu_tilde: array-like, shape=(batch_size, n_features)</span>
+<span class="sd">        Matrix in which each row represents the assigned mean vector.</span>
+<span class="sd">    pi_tilde: array-like, shape=(batch_size, )</span>
+<span class="sd">        Vector in which each element represents the assigned mixing coefficient.</span>
+<span class="sd">    alpha: float</span>
+<span class="sd">        Softmax inverse temperature.</span>
+<span class="sd">    interval : array-like, default=tf.constant((2.0, 2.0))</span>
+<span class="sd">        Array representing the range on each axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    loss: array-like, shape=(batch_size, )</span>
+<span class="sd">        Computed loss for each sample.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">mu_tilde</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span>
+            <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span>
+            <span class="p">):</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">*</span> <span class="n">interval</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">mu_tilde</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+                    <span class="p">),</span>
+                <span class="n">d</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+            <span class="n">d</span> <span class="o">-</span> <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pi_tilde</span><span class="p">)</span><span class="o">/</span><span class="n">alpha</span>
             <span class="p">)</span></div>
 </pre></div>
 

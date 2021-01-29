@@ -332,7 +332,7 @@
         <span class="c1"># compute pairwise dissimilarities</span>
         <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dissimilarity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
         <span class="c1"># compute the soft assignments</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+        <span class="n">assigns</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
                 <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">*</span> <span class="n">D</span> <span class="o">+</span>\
                         <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
                         <span class="p">)</span>
@@ -437,7 +437,7 @@
         <span class="c1"># compute the soft assignments.</span>
         <span class="n">assigns</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
                 <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">__alpha</span> <span class="o">*</span> <span class="n">D</span> <span class="o">+</span>\
-                        <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
+                        <span class="n">_tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">_tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixers</span><span class="p">))</span>
                         <span class="p">)</span>
         <span class="c1"># soft-assigned centroids</span>
         <span class="n">mu_hat</span> <span class="o">=</span> <span class="n">_tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>

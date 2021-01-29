@@ -8,6 +8,7 @@ dissimilarity in :mod:`dmae.dissimilarities`.
 
 import tensorflow as _tf
 import itertools as _itertools
+from dmae import normalizers as _normalizers
 
 def euclidean_loss(X, mu_tilde, pi_tilde, alpha):
     """
@@ -153,7 +154,7 @@ def chebyshev_loss(X, mu_tilde, pi_tilde, alpha):
 
     Returns
     --------
-    loss: array-like, shape=(batch_size, )
+    loss: float
         Computed loss for each sample.
     """
 
@@ -228,8 +229,8 @@ def toroidal_euclidean_loss(
 
     Returns
     --------
-    loss: array-like, shape=(batch_size, )
-        Computed loss for each sample.
+    loss: float
+        Computed loss for each batch.
 
     """
 
@@ -252,3 +253,57 @@ def toroidal_euclidean_loss(
     return _tf.reduce_sum(
             d - _tf.math.log(pi_tilde)/alpha
             )
+
+def kullback_leibler_loss(
+        loggit_P, loggit_Q_tilde,
+        pi_tilde, alpha, eps=1e-3,
+        normalization="softmax_abs"
+        ):
+    """
+    Loss for the Kullback Leibler divergence.
+
+    Parameters
+    ----------
+    loggit_P: array-like, shape=(batch_size, n_features)
+        Input batch loggits (pre-normalization values).
+    loggit_Q_tilde: array-like, shape=(batch_size, n_features)
+        Cluster loggits (pre-normalization values)
+    pi_tilde: array-like, shape=(batch_size, )
+        Vector in which each element represents the assigned mixing coefficient.
+    alpha: float
+        Softmax inverse temperature.
+    normalization: {str, function}, default="softmax_abs"
+        Specifies which normalization function is used to transform the data into
+        probabilities. You can specify a custom functon `f(X, eps)` with the arguments 
+        `X` and `eps`, or use a predefined function {"softmax_abs", "softmax_relu", "squared_sum", "abs_sum", "relu_sum", "identity"}
+
+    Returns
+    --------
+    loss: float
+        Computed loss for each batch.
+
+    """
+
+    if normalization=="softmax_abs":
+        norm = _normalizers.softmax_abs
+    elif normalization=="softmax_relu":
+        norm = _normalizers.softmax_relu
+    elif normalization=="squared_sum":
+        norm = _normalizers.squared_sum
+    elif normalization=="abs_sum":
+        norm = _normalizers.abs_sum
+    elif normalization=="relu_sum":
+        norm = _normalizers.relu_sum
+    elif normalization=="identity":
+        norm = _normalizers.identity
+    else: 
+        norm = normalization
+
+    P = norm(loggit_P, eps)
+    Q = norm(loggit_Q_tilde, eps)
+
+    return _tf.reduce_sum(
+            P * _tf.math.log(P) -\
+                    P * _tf.math.log(Q)
+                    )
+

@@ -163,14 +163,14 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>You can install <code class="docutils literal notranslate"><span class="pre">dmae</span></code> from PyPI using pip, installing from source or pulling a preconfigured docker image.</p>
+<p>You can install <code class="docutils literal notranslate"><span class="pre">dmae</span></code> from PyPI using pip, from the source <a class="reference external" href="https://github.com/juselara1/dmae">Github repository</a> or pulling a preconfigured docker image.</p>
 <div class="section" id="pypi">
 <h2>PyPI<a class="headerlink" href="#pypi" title="Permalink to this headline">¶</a></h2>
 <p>To install <code class="docutils literal notranslate"><span class="pre">dmae</span></code> using pip you can run the followiing command:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install dmae
 </pre></div>
 </div>
-<p><em>(optional) If you have an environment with the nvidia drivers and CUDA, you can isntead run:</em></p>
+<p><em>(optional) If you have an environment with the nvidia drivers and CUDA, you can instead run:</em></p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install dmae-gpu
 </pre></div>
 </div>
@@ -190,11 +190,7 @@
 </pre></div>
 </div>
 <p>Finally, you can install <code class="docutils literal notranslate"><span class="pre">dmae</span></code> via setuptools</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python setup.py install
-</pre></div>
-</div>
-<p>Or:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install .
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install --no-deps . 
 </pre></div>
 </div>
 </div>

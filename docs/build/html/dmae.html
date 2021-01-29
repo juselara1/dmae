@@ -181,8 +181,7 @@ in tensorflow.</p>
 <dl class="py function">
 <dt id="dmae.dissimilarities.chebyshev">
 <code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">chebyshev</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#chebyshev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.chebyshev" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a pairwise Chevyshev distance between two matrices:
-<span class="math notranslate nohighlight">\(\max{(|\mathbf{x}_i-\mathbf{y}_j|)}\)</span></p>
+<dd><p>Computes a pairwise Chevyshev distance between two matrices <span class="math notranslate nohighlight">\(\max{(|\mathbf{x}_i-\mathbf{y}_j|)}\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -204,8 +203,7 @@ in tensorflow.</p>
 <dl class="py function">
 <dt id="dmae.dissimilarities.cosine">
 <code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">cosine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#cosine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.cosine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a pairwise cosine distance between two matrices:
-<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)\)</span></p>
+<dd><p>Computes a pairwise cosine distance between two matrices <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -227,8 +225,7 @@ in tensorflow.</p>
 <dl class="py function">
 <dt id="dmae.dissimilarities.euclidean">
 <code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">euclidean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#euclidean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.euclidean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a pairwise Euclidean distance between two matrices:
-<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||\)</span></p>
+<dd><p>Computes a pairwise Euclidean distance between two matrices <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -248,9 +245,33 @@ in tensorflow.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="dmae.dissimilarities.kullback_leibler">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">kullback_leibler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loggit_P</span></em>, <em class="sig-param"><span class="n">loggit_Q</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#kullback_leibler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.kullback_leibler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kullback Leibler divergence. <span class="math notranslate nohighlight">\(\sum_x P_x \log{P_x}-P_x \log{Q_x}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>loggit_P</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix of loggits.</p>
+</dd>
+<dt><strong>loggit_Q</strong><span class="classifier">array-like, shape=(n_features, n_features)</span></dt><dd><p>Matrix in which each row represents the unsigned loggit of a cluster.</p>
+</dd>
+<dt><strong>eps: float, default=1e-3</strong></dt><dd><p>Hyperparameter to avoid numerical issues.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="dmae.dissimilarities.mahalanobis">
 <code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">mahalanobis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">cov</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#mahalanobis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.mahalanobis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a pairwise Mahalanobis distance: <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)\)</span></p>
+<dd><p>Computes a pairwise Mahalanobis distance <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -274,8 +295,7 @@ in tensorflow.</p>
 <dl class="py function">
 <dt id="dmae.dissimilarities.manhattan">
 <code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">manhattan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#manhattan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.manhattan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a pairwise Manhattan distance between two matrices:
-<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|\)</span></p>
+<dd><p>Computes a pairwise Manhattan distance between two matrices <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -297,8 +317,7 @@ in tensorflow.</p>
 <dl class="py function">
 <dt id="dmae.dissimilarities.minkowsky">
 <code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">minkowsky</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#minkowsky"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.minkowsky" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a pairwise Minkowsky distance between two matrices:
-<span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}\)</span></p>
+<dd><p>Computes a pairwise Minkowsky distance between two matrices <span class="math notranslate nohighlight">\(\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -307,6 +326,30 @@ in tensorflow.</p>
 <dt><strong>Y</strong><span class="classifier">array-like, shape=(n_clusters, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
 </dd>
 <dt><strong>p</strong><span class="classifier">float</span></dt><dd><p>Order of the Minkowsky distance.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Z</strong><span class="classifier">array-like, shape=(batch_size, n_clusters)</span></dt><dd><p>Pairwise dissimilarity matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.dissimilarities.toroidal_euclidean">
+<code class="sig-prename descclassname">dmae.dissimilarities.</code><code class="sig-name descname">toroidal_euclidean</code><span class="sig-paren">(</span><em class="sig-param">X, Y, interval=&lt;tf.Tensor: shape=(2,), dtype=float32, numpy=array([2., 2.], dtype=float32)&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/dissimilarities.html#toroidal_euclidean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.dissimilarities.toroidal_euclidean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euclidean dissimilarity that considers circular boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape=(batch_size, n_features)</span></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">array-like, shape=(n_features, n_features)</span></dt><dd><p>Matrix in which each row represents a centroid of a cluster.</p>
+</dd>
+<dt><strong>interval</strong><span class="classifier">array-like, default=tf.constant((2.0, 2.0))</span></dt><dd><p>Array representing the range on each axis.</p>
 </dd>
 </dl>
 </dd>
@@ -1468,6 +1511,34 @@ dissimilarity in <a class="reference internal" href="#module-dmae.dissimilaritie
 <dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
 </dd>
 <dt><strong>p: float</strong></dt><dd><p>Order of the Minkowsky distance</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>loss: array-like, shape=(batch_size, )</dt><dd><p>Computed loss for each sample.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dmae.losses.toroidal_euclidean_loss">
+<code class="sig-prename descclassname">dmae.losses.</code><code class="sig-name descname">toroidal_euclidean_loss</code><span class="sig-paren">(</span><em class="sig-param">X, mu_tilde, pi_tilde, alpha, interval=&lt;tf.Tensor: shape=(2,), dtype=float32, numpy=array([2., 2.], dtype=float32)&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dmae/losses.html#toroidal_euclidean_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dmae.losses.toroidal_euclidean_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loss for the toroidal euclidean dissimilarity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Input batch matrix.</p>
+</dd>
+<dt><strong>mu_tilde: array-like, shape=(batch_size, n_features)</strong></dt><dd><p>Matrix in which each row represents the assigned mean vector.</p>
+</dd>
+<dt><strong>pi_tilde: array-like, shape=(batch_size, )</strong></dt><dd><p>Vector in which each element represents the assigned mixing coefficient.</p>
+</dd>
+<dt><strong>alpha: float</strong></dt><dd><p>Softmax inverse temperature.</p>
+</dd>
+<dt><strong>interval</strong><span class="classifier">array-like, default=tf.constant((2.0, 2.0))</span></dt><dd><p>Array representing the range on each axis.</p>
 </dd>
 </dl>
 </dd>

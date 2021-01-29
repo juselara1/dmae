@@ -8,11 +8,11 @@ in tensorflow.
 
 import tensorflow as _tf
 import itertools as _itertools
+from dmae import normalizers as _normalizers
 
 def euclidean(X, Y):
     """
-    Computes a pairwise Euclidean distance between two matrices:
-    :math:`\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||`
+    Computes a pairwise Euclidean distance between two matrices :math:`\mathbf{D}_{ij}=||\mathbf{x}_i-\mathbf{y}_j||`.
 
     Parameters
     ----------
@@ -35,8 +35,7 @@ def euclidean(X, Y):
 
 def cosine(X, Y):
     """
-    Computes a pairwise cosine distance between two matrices: 
-    :math:`\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)`
+    Computes a pairwise cosine distance between two matrices :math:`\mathbf{D}_{ij}=(\mathbf{x}_i \cdot \mathbf{y}_j)/(||\mathbf{x}_i|| \cdot ||\mathbf{y}_j||)`.
 
     Parameters
     ----------
@@ -58,8 +57,7 @@ def cosine(X, Y):
 
 def manhattan(X, Y):
     """
-    Computes a pairwise Manhattan distance between two matrices:
-    :math:`\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|`
+    Computes a pairwise Manhattan distance between two matrices :math:`\mathbf{D}_{ij}=\sum |\mathbf{x}_i|-|\mathbf{y}_j|`.
 
     Parameters
     ----------
@@ -80,8 +78,7 @@ def manhattan(X, Y):
 
 def minkowsky(X, Y, p):
     """
-    Computes a pairwise Minkowsky distance between two matrices:
-    :math:`\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}`
+    Computes a pairwise Minkowsky distance between two matrices :math:`\mathbf{D}_{ij}=( \sum |\mathbf{x}_i - \mathbf{y}_j|^p)^{1/p}`.
 
     Parameters
     ----------
@@ -112,8 +109,7 @@ def minkowsky(X, Y, p):
 
 def chebyshev(X, Y):
     """
-    Computes a pairwise Chevyshev distance between two matrices:
-    :math:`\max{(|\mathbf{x}_i-\mathbf{y}_j|)}`
+    Computes a pairwise Chevyshev distance between two matrices :math:`\max{(|\mathbf{x}_i-\mathbf{y}_j|)}`.
 
     Parameters
     ----------
@@ -138,7 +134,7 @@ def chebyshev(X, Y):
 
 def mahalanobis(X, Y, cov):
     """
-    Computes a pairwise Mahalanobis distance: :math:`\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)`
+    Computes a pairwise Mahalanobis distance :math:`\mathbf{D}_{ij}=(\mathbf{x}_i-\mathbf{y}_j)^T \Sigma_j (\mathbf{x}_i-\mathbf{y}_j)`.
 
     Parameters
     ----------
@@ -172,7 +168,8 @@ def toroidal_euclidean(
             (2.0, 2.0)
             )
         ):
-    """toroidal_euclidean.
+    """
+    Euclidean dissimilarity that considers circular boundaries.
 
     Parameters
     ----------
@@ -213,3 +210,67 @@ def toroidal_euclidean(
             x_i, Y, interval
             )
     return _tf.vectorized_map(func, X)
+
+def kullback_leibler(
+        loggit_P, loggit_Q, 
+        eps=1e-3, normalization="softmax_abs"):
+    """
+    Kullback Leibler divergence. :math:`\sum_x P_x \log{P_x}-P_x \log{Q_x}`
+
+    Parameters
+    ----------
+    loggit_P : array-like, shape=(batch_size, n_features)
+        Input batch matrix of loggits.
+    loggit_Q : array-like, shape=(n_features, n_features)
+        Matrix in which each row represents the unsigned loggit of a cluster.
+    eps: float, default=1e-3
+        Hyperparameter to avoid numerical issues.
+    normalization: {str, function}, default="softmax_abs"
+        Specifies which normalization function is used to transform the data into
+        probabilities. You can specify a custom functon `f(X, eps)` with the arguments 
+        `X` and `eps`, or use a predefined function {"softmax_abs", "softmax_relu", "squared_sum", "abs_sum", "relu_sum", "identity"}
+
+    Returns
+    -------
+    Z : array-like, shape=(batch_size, n_clusters)
+        Pairwise dissimilarity matrix.
+    """
+
+    if normalization=="softmax_abs":
+        norm = _normalizers.softmax_abs
+    elif normalization=="softmax_relu":
+        norm = _normalizers.softmax_relu
+    elif normalization=="squared_sum":
+        norm = _normalizers.squared_sum
+    elif normalization=="abs_sum":
+        norm = _normalizers.abs_sum
+    elif normalization=="relu_sum":
+        norm = _normalizers.relu_sum
+    elif normalization=="identity":
+        norm = _normalizers.identity
+    else: 
+        norm = normalization
+
+    P = norm(loggit_P, eps)
+    Q = norm(loggit_Q, eps)
+    term1 = _tf.reduce_sum(
+            P * _tf.math.log(P),
+            axis=1
+            )
+    def func(p_i):
+        p_i = _tf.reshape(
+            p_i,
+            (1, -1)
+            )
+        return _tf.squeeze(
+            _tf.matmul(
+                p_i, _tf.math.log(Q),
+                transpose_b=True
+                )
+            )
+    
+    Z = _tf.vectorized_map(func, P) 
+    return -Z + _tf.reshape(
+            term1, (-1, 1)
+            )
+

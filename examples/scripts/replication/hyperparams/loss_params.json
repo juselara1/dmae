@@ -1,0 +1,10 @@
+{
+    "autoencoder": {
+	"loss": "mse",
+	"optimizer": "sgd",
+	"optimizer_params": {
+	    "lr": 1.0,
+	    "momentum": 0.9
+	}
+    }
+}

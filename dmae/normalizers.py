@@ -25,8 +25,12 @@ def identity(X, eps):
     Z : array-like, shape=(n_samples, n_clusters)
         Normalized matrix.
     """
+    X_pos = X + eps
+    return X_pos / _tf.reshape(
+            _tf.reduce_sum(X_pos, axis=1), 
+            (-1, 1)
+            )
 
-    return X
 
 def softmax_abs(X, eps):
     """

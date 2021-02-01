@@ -1,0 +1,22 @@
+[
+    {
+	"kind": "dense",
+	"units": 10,
+	"activation": "relu",
+	"kernel_initializer": "variance"
+    },
+
+    {
+	"kind": "dense",
+	"units": 10,
+	"activation": "relu",
+	"kernel_initializer": "variance"
+    },
+
+    {
+	"kind": "dense",
+	"units": 10,
+	"activation": "relu",
+	"kernel_initializer": "variance"
+    }
+]

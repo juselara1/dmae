@@ -1,0 +1,6 @@
+{
+    "use_cov": false,
+    "n_clusters": 10,
+    "alpha": 100,
+    "dissimilarity": "euclidean"
+}

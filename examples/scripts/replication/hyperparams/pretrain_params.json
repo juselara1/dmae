@@ -1,0 +1,6 @@
+{
+    "use_cov": false,
+    "n_clusters": 10,
+    "epochs": 1,
+    "batch_size": 256
+}

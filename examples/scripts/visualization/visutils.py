@@ -9,6 +9,8 @@ on 2D data.
 import numpy as _np
 import matplotlib.pyplot as _plt
 from matplotlib.backends.backend_pdf import PdfPages as _PdfPages
+import ternary as _ternary
+from ternary.helpers import simplex_iterator as _simplex_iterator
 
 def _make_grid(X, n_points=256):
     """
@@ -237,6 +239,58 @@ def probability_region(
                 preds[:, i].reshape(X1.shape), 
                 colors='k', linestyles='-')
     return fig, ax
+
+def _make_dict(y_pred, scale):
+    #TODOC
+    mapping = [
+            (0.5, 0.75, 0.5),
+            (1, 1, 1),
+            (0.5, 0.56, 0.62),
+            (0.62, 0.81, 0.87)
+            ]
+
+    data = dict()
+    for pos, (i, j, k) in enumerate(_ternary.helpers.simplex_iterator(scale)):
+        data[(i, j)] = mapping[
+                int(y_pred[pos])
+                ]
+    return data
+
+def decision_simplex(
+        encoder_model, title, X,
+        scale=100, batch_size=32,
+        rows=2, cols=2):
+    # TODOC
+    X_grid = _np.array(
+            list(
+                _simplex_iterator(scale)
+                )
+            )[:, :2] / scale
+
+    fig, ax = _ternary.figure(scale=scale)
+
+    preds = encoder_model.predict(X_grid)
+    y_pred = _np.argmax(preds, axis=1)
+
+    data = _make_dict(y_pred, scale)
+
+    ax.heatmap(
+            data, 
+            style="triangle",
+            cmap="ocean", 
+            use_rgba=True,
+            )
+
+    ax.scatter(
+            X*scale,
+            color=(0, 0, 0, 0.5), 
+            zorder=2,
+            s=10
+            )
+    ax.boundary()
+    ax.set_title(title)
+    return fig, ax
+
 
 def save_pdf(figs, filename):
     """

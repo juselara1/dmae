@@ -1,3 +1,38 @@
 {
-    "input_shape": [2]
+    "path": "data/data.h5",
+    "batch_size": 256,
+    "dataset_name": "mnist",
+    "input_shape": [28, 28, 1],
+    "augmentation": {
+	"random_brightness": {
+	    "max_delta": 0.3
+	},
+	"random_contrast": {
+	    "lower": 0.9,
+	    "upper": 1.0
+	},
+	"random_hue": {
+	    "max_delta": 0.1
+	},
+	"random_saturation": {
+	    "lower": 0.9,
+	    "upper": 1.0
+	},
+	"random_rotation": {
+	    "minval": -0.3, 
+	    "maxval": 0.3
+	},
+	"width_shift_range": {
+	    "minval": -2,
+	    "maxval": 2
+	},
+	"height_shift_range": {
+	    "minval": -2,
+	    "maxval": 2
+	},
+	"horizontal_flip": false,
+	"vertical_flip": false
+    },
+    "augment_autoencoder": false,
+    "augment_clustering": false
 }

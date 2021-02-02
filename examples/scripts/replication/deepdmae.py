@@ -19,7 +19,8 @@ class StackedLayers(_Model):
         #TODOC
         self.__layers = []
         for param in self.__params:
-            param = _initializer_lut(param)
+            if param["kind"] in ["dense", "conv"]:
+                param = _initializer_lut(param)
             layer = _layers_lut(param)
             self.__layers.append(
                     layer

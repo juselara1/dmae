@@ -1,6 +1,6 @@
 absl-py==0.11.0
 astunparse==1.6.3
-cachetools==4.2.1
+cachetools==4.2.0
 certifi==2020.12.5
 chardet==4.0.0
 flatbuffers==1.12
@@ -15,6 +15,8 @@ joblib==1.0.0
 Keras-Preprocessing==1.1.2
 Markdown==3.3.3
 numpy==1.19.5
+pandas==1.2.1
+matplotlib==3.3.4
 oauthlib==3.1.0
 opt-einsum==3.3.0
 protobuf==3.14.0
@@ -28,9 +30,9 @@ scipy==1.6.0
 six==1.15.0
 tensorboard==2.4.1
 tensorboard-plugin-wit==1.8.0
+tensorflow-gpu==2.4.1
 tensorflow-addons==0.12.0
 tensorflow-estimator==2.4.0
-tensorflow-gpu==2.4.1
 termcolor==1.1.0
 threadpoolctl==2.1.0
 typeguard==2.10.0
@@ -38,3 +40,4 @@ typing-extensions==3.7.4.3
 urllib3==1.26.2
 Werkzeug==1.0.1
 wrapt==1.12.1
+python-ternary==1.0.7

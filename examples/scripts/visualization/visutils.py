@@ -250,8 +250,8 @@ def _make_dict(y_pred, scale):
             ]
 
     data = dict()
-    for pos, (i, j, k) in enumerate(_ternary.helpers.simplex_iterator(scale)):
-        data[(i, j)] = mapping[
+    for pos, simplex_point in enumerate(_simplex_iterator(scale)):
+        data[simplex_point] = mapping[
                 int(y_pred[pos])
                 ]
     return data
@@ -265,7 +265,7 @@ def decision_simplex(
             list(
                 _simplex_iterator(scale)
                 )
-            )[:, :2] / scale
+            ) / scale
 
     fig, ax = _ternary.figure(scale=scale)
 
@@ -281,6 +281,12 @@ def decision_simplex(
             use_rgba=True,
             )
 
+    # TORM
+    ax.boundary()
+    fig.savefig("im1.pdf")
+    fig, ax = _ternary.figure(scale=scale)
+    #
+
     ax.scatter(
             X*scale,
             color=(0, 0, 0, 0.5), 
@@ -288,6 +294,11 @@ def decision_simplex(
             s=10
             )
     ax.boundary()
+
+    #TORM
+    fig.savefig("im2.pdf")
+    # 
+
     ax.set_title(title)
     return fig, ax
 

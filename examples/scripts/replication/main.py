@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import numpy as np
 
-import utils, train, logger, models
+import utils, train, logger, models, datasets, metrics
 from dmae.metrics import unsupervised_classification_accuracy as uacc
 from sklearn.metrics import normalized_mutual_info_score as nmi, adjusted_rand_score as ars
 
@@ -22,6 +22,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arguments = utils.json_arguments(args)
 
+    # make models
     models = models.make_models(
             arguments["encoder_params"],
             arguments["decoder_params"],
@@ -30,47 +31,27 @@ if __name__ == '__main__':
             arguments["dataset_params"]["input_shape"]
             )
 
-    # Make datasets
-    # TODO
-    datasets = {
-            "autoencoder": np.random.uniform(0, 1, (100, 2)),
-            "full_model": np.random.uniform(0, 1, (100, 2)),
-            "labels" : np.random.randint(0, 2, (100, )),
-            "input_shape": (2, )
-            }
+    # make datasets
+    datasets = datasets.make_datasets(
+            **arguments["dataset_params"]
+            )
 
-    metrics = {
-            "uACC": lambda y_true, y_pred:\
-                    uacc(
-                        y_true, np.argmax(
-                            y_pred, axis=1
-                            )
-                        ),
-            "NMI": lambda y_true, y_pred:\
-                    nmi(
-                        y_true, np.argmax(
-                            y_pred, axis=1
-                            )
-                        ),
-            "ARS": lambda y_true, y_pred:\
-                    ars(
-                        y_true, np.argmax(
-                            y_pred, axis=1
-                            )
-                        )
-            }
+    # make metrics
+    metrics = metrics.make_metrics()
 
+    # logger
     scorer = logger.Logger(
             models, metrics, 
             datasets, "mnist"
             )
 
     # Pretrain
+    arguments["pretrain_params"]\
+            ["steps_per_epoch"] = datasets["steps"]
     train.pretrain(
             models, datasets,
             arguments["pretrain_params"],
-            scorer,
-            iteration=1
+            scorer, iteration=1
             )
     scorer.save()
 """

@@ -11,7 +11,7 @@ with open("README.md", "r") as f:
 
 setup(
         name="dmae",
-        version="1.1.1",
+        version="1.1.2",
         author="Juan S. Lara",
         author_email="julara@unal.edu.co",
         packages=find_packages(),

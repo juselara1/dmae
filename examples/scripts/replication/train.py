@@ -2,20 +2,27 @@ import tensorflow as _tf
 
 from sklearn.cluster import KMeans as _KMeans
 from dmae.initializers import InitKMeansCov as _InitKMeansCov
+from copy import deepcopy
 
-def pretrain(models, datasets, params, logger, iteration=1):
+def pretrain(
+        models, datasets,
+        params, logger,
+        iteration=1
+        ):
     #TODOC
-    n_clusters = params.pop("n_clusters")
+    params = deepcopy(params)
     use_cov = params.pop("use_cov")
+    n_clusters = params.pop("n_clusters")
 
+    # pretrain encoder and decoder
     models["autoencoder"].fit(
-            datasets["autoencoder"],
-            datasets["autoencoder"],
+            datasets["pretrain"].repeat(),
             **params
             )
 
+    # pretrain dmae
     X_latent = models["encoder"].predict(
-            datasets["autoencoder"]
+            datasets["test"]
             )
 
     pretrainer = _KMeans(n_clusters).fit(X_latent)
@@ -38,5 +45,8 @@ def pretrain(models, datasets, params, logger, iteration=1):
     models["assign_model"].\
             layers[2].set_weights(weights)
 
-
-    logger("assign_model", "autoencoder", iteration)
+    # log results before dmae training
+    logger(
+            "assign_model", "pretrain", 
+            iteration
+            )

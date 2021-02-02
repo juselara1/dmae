@@ -41,9 +41,12 @@ class Logger:
         #TODOC
         model = self.__models[model_name]
         dataset = self.__datasets["test"]
+        dataset.reset_gen()
+        dataset = dataset()
+
         y_true = self.__datasets["labels"]
         preds = model.predict(
-                dataset.repeat(), 
+                dataset,
                 steps=self.__datasets["steps"]
                 )
 

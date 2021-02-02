@@ -40,6 +40,16 @@ def make_models(
             inputs=[inp],
             outputs=[X_tilde]
             )
+    
+    full_model.add_loss(
+            utils.dmae_loss(
+                inp, X_tilde, H, 
+                theta_tilde, dmae_params, 
+                loss_params
+                )
+            )
+    compile_params = utils.optimizer_lut(loss_params["dmae"])
+    full_model.compile(optimizer=compile_params["optimizer"])
 
     encoder_model = Model(
             inputs=[inp],

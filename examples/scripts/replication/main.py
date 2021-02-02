@@ -10,11 +10,11 @@ def make_parser():
     parser.add_argument("--encoder_params", type=str, default="encoder_params.json")
     parser.add_argument("--decoder_params", type=str, default="decoder_params.json")
     parser.add_argument("--dmae_params", type=str, default="dmae_params.json")
-    parser.add_argument("--experiment_params", type=str, default="experiment_params.json")
     parser.add_argument("--dataset_params", type=str, default="dataset_params.json")
     parser.add_argument("--pretrain_params", type=str, default="pretrain_params.json")
     parser.add_argument("--train_params", type=str, default="train_params.json")
     parser.add_argument("--loss_params", type=str, default="loss_params.json")
+    parser.add_argument("--iters", type=int, default=5)
     return parser
 
 if __name__ == '__main__':
@@ -48,16 +48,18 @@ if __name__ == '__main__':
     # Pretrain
     arguments["pretrain_params"]\
             ["steps_per_epoch"] = datasets["steps"]
+    arguments["train_params"]\
+            ["steps_per_epoch"] = datasets["steps"]
+
     train.pretrain(
             models, datasets,
             arguments["pretrain_params"],
+            scorer, iteration=1,
+            dissimilarity=arguments["dmae_params"]["dissimilarity"]
+            )
+    train.train(
+            models, datasets,
+            arguments["train_params"],
             scorer, iteration=1
             )
     scorer.save()
-"""
-    # Training
-    train.training(
-            models, datasets,
-            training_arguments
-            )
-"""

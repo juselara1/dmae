@@ -21,36 +21,27 @@ class _Generator:
     def __batch_sample(self):
         #TODOC
         def gen():
-            i=0
+            self.cont = 0
             with _h5py.File(self.__path, "r") as df:
                 n_samples = df[self.__dataset_name].shape[0]
             while True:
-                if i + self.__batch_size > n_samples:
-                    i = 0
+                if self.cont + self.__batch_size > n_samples:
+                    self.cont = 0
                 with _h5py.File(self.__path, "r") as df:
-                    X = df[self.__dataset_name][i: i + self.__batch_size]
+                    X = df[self.__dataset_name][self.cont: self.cont + self.__batch_size]
                     yield X
-                i += self.__batch_size
+                self.cont += self.__batch_size
         self.__gen = gen()
 
+    def reset_gen(self):
+        self.__batch_sample()
+
     def __call__(self):
-        yield next(self.__gen)
+        while True:
+            yield next(self.__gen)
 
 def _apply_transform(batch, augmentation): 
     #TODOC
-    batch = _tfi.random_brightness(
-            batch, **augmentation["random_brightness"]
-            )
-    batch = _tfi.random_contrast(
-            batch, **augmentation["random_contrast"]
-            )
-    batch = _tfi.random_hue(
-            batch, **augmentation["random_hue"]
-            )
-    batch = _tfi.random_saturation(
-            batch, **augmentation["random_saturation"]
-            )
-    
     random_angles = _tf.random.uniform(
             shape = (batch.shape[0], ), 
             **augmentation["random_rotation"]
@@ -94,6 +85,7 @@ def make_datasets(**kwargs):
             kwargs["batch_size"],
             kwargs["dataset_name"],
             )
+
     ds = _Dataset.from_generator(
             gen, 
             output_types = _tf.float32,
@@ -101,6 +93,13 @@ def make_datasets(**kwargs):
                 kwargs["batch_size"], *kwargs["input_shape"]
                 )
             )
+
+    ds_test = _Generator(
+            kwargs["path"],
+            kwargs["batch_size"],
+            kwargs["dataset_name"],
+            )
+
     # augmentation
     if kwargs["augment_autoencoder"]:
         ds_pretrain = ds.map(
@@ -121,11 +120,8 @@ def make_datasets(**kwargs):
                     )
                 )
     else:
-        ds_clustering = ds.map(
-                lambda batch: _apply_transform(
-                    batch, kwargs["augmentation"]
-                    )
-                )
+        ds_clustering = ds
+    
     # labels
     with _h5py.File(kwargs["path"], "r") as df:
         labels = df[kwargs["dataset_name"]+"_labels"][:]
@@ -135,7 +131,7 @@ def make_datasets(**kwargs):
     return {
             "pretrain": ds_pretrain,
             "clustering": ds_clustering,
-            "test": ds,
+            "test": ds_test,
             "labels": labels,
             "steps": steps
             }

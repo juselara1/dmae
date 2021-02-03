@@ -4,31 +4,34 @@ import os as _os
 class Logger:
     #TODOC
     def __init__(
-            self, models, metrics, 
-            datasets, dataset_name, 
+            self,
+            dataset_name, 
             evaluable_datasets = [
                 "pretrain", "clustering"
                 ],
+            metric_names = ["uACC", "NMI", "ARS"],
             save_path="./results/"
             ):
         
+        self.__dataset_name = dataset_name
+        self.__evaluable_datasets = evaluable_datasets
+        self.__metric_names = metric_names
+        self.__save_path = save_path
+        self.__make_dataframes()
+
+    def add(self, models, metrics, datasets):
         self.__models = models
         self.__metrics = metrics
         self.__datasets = datasets
-        self.__dataset_name = dataset_name
-        self.__evaluable_datasets = evaluable_datasets
-        self.__save_path = save_path
-        self.__make_dataframes()
 
     def __make_dataframes(self):
         #TODOC
         self.__dfs = {}
         for dataset in self.__evaluable_datasets:
-            metric_names = tuple(self.__metrics.keys())
             self.__dfs[dataset] = _pd.DataFrame(
                     columns=[
                         "iteration",
-                        *metric_names
+                        *self.__metric_names
                         ]
                     )
             self.__dfs[dataset].set_index("iteration", inplace=True)
@@ -44,7 +47,7 @@ class Logger:
         dataset.reset_gen()
         dataset = dataset()
 
-        y_true = self.__datasets["labels"]
+        y_true = self.__datasets["labels"].astype("int32")
         preds = model.predict(
                 dataset,
                 steps=self.__datasets["steps"]

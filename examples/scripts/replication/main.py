@@ -17,13 +17,9 @@ def make_parser():
     parser.add_argument("--iters", type=int, default=5)
     return parser
 
-if __name__ == '__main__':
-    parser = make_parser()
-    args = parser.parse_args()
-    arguments = utils.json_arguments(args)
-
+def make_iteration(arguments, scorer, iteration):
     # make models
-    models = models.make_models(
+    cur_models = models.make_models(
             arguments["encoder_params"],
             arguments["decoder_params"],
             arguments["dmae_params"],
@@ -32,34 +28,42 @@ if __name__ == '__main__':
             )
 
     # make datasets
-    datasets = datasets.make_datasets(
+    cur_datasets = datasets.make_datasets(
             **arguments["dataset_params"]
             )
 
     # make metrics
-    metrics = metrics.make_metrics()
+    cur_metrics = metrics.make_metrics()
 
     # logger
-    scorer = logger.Logger(
-            models, metrics, 
-            datasets, "mnist"
-            )
-
+    scorer.add(cur_models, cur_metrics, cur_datasets)
+    
     # Pretrain
     arguments["pretrain_params"]\
-            ["steps_per_epoch"] = datasets["steps"]
+            ["steps_per_epoch"] = cur_datasets["steps"]
     arguments["train_params"]\
-            ["steps_per_epoch"] = datasets["steps"]
+            ["steps_per_epoch"] = cur_datasets["steps"]
 
     train.pretrain(
-            models, datasets,
+            cur_models, cur_datasets,
             arguments["pretrain_params"],
-            scorer, iteration=1,
+            scorer, iteration=iteration,
             dissimilarity=arguments["dmae_params"]["dissimilarity"]
             )
     train.train(
-            models, datasets,
+            cur_models, cur_datasets,
             arguments["train_params"],
-            scorer, iteration=1
+            scorer, iteration=iteration
             )
+
+if __name__ == '__main__':
+    parser = make_parser()
+    args = parser.parse_args()
+    arguments = utils.json_arguments(args)
+    scorer = logger.Logger(
+            arguments["dataset_params"]["dataset_name"]
+            )
+
+    for iteration in range(args.iters):
+        make_iteration(arguments, scorer, iteration)
     scorer.save()

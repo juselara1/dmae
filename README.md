@@ -2,6 +2,9 @@
 
 <a href="https://pypi.python.org/pypi/dmae"><img src="https://img.shields.io/pypi/v/dmae.svg"/></a>
 <a href="https://hub.docker.com/repository/docker/juselara/dmae"><img src="https://img.shields.io/badge/docker-v1.1.2-blue"></a>
+<a href='https://dmae.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/dmae/badge/?version=latest' alt='Documentation Status' />
+</a>
 
 Tensorflow implementation of the Dissimilarity Mixture Autoencoder:
 

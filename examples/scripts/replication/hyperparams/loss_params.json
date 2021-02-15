@@ -1,0 +1,19 @@
+{
+    "autoencoder": {
+	"loss": "mse",
+	"optimizer": "sgd",
+	"optimizer_params": {
+	    "lr": 1.0,
+	    "momentum": 0.9
+	}
+    },
+
+    "dmae": {
+	"lambda_r": 0.01,
+	"lambda_c": 1.0,
+	"optimizer": "adam",
+	"optimizer_params": {
+	    "lr": 1e-5
+	}
+    }
+}

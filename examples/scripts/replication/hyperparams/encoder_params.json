@@ -1,0 +1,33 @@
+[
+    {
+	"kind": "flatten"
+    },
+
+    {
+	"kind": "dense",
+	"units": 500,
+	"activation": "relu",
+	"kernel_initializer": "variance"
+    },
+
+    {
+	"kind": "dense",
+	"units": 500,
+	"activation": "relu",
+	"kernel_initializer": "variance"
+    },
+
+    {
+	"kind": "dense",
+	"units": 2000,
+	"activation": "relu",
+	"kernel_initializer": "variance"
+    },
+
+    {
+	"kind": "dense",
+	"units": 10,
+	"activation": "linear",
+	"kernel_initializer": "variance"
+    }
+]

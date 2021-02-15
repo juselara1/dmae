@@ -1,6 +1,7 @@
-# Dissimilarity Mixture Autoencoder
+# Dissimilarity Mixture Autoencoder for Deep Clustering
 
-![dmae](https://raw.githubusercontent.com/larajuse/Resources/master/dmae/dmae.svg)
+<a href="https://pypi.python.org/pypi/dmae"><img src="https://img.shields.io/pypi/v/dmae.svg"/></a>
+<a href="https://hub.docker.com/repository/docker/juselara/dmae"><img src="https://img.shields.io/badge/docker-v1.1.2-blue"></a>
 
 Tensorflow implementation of the Dissimilarity Mixture Autoencoder:
 
@@ -8,58 +9,93 @@ Tensorflow implementation of the Dissimilarity Mixture Autoencoder:
 
 ## Abstract
 
-In this paper, we introduce the Dissimilarity Mixture Autoencoder (DMAE), a novel neural network model that uses a dissimilarity function to generalize a family of density estimation and clustering methods. It is formulated in such a way that it internally estimates the parameters of a probability distribution through gradient-based optimization. Also, the proposed model can leverage from deep representation learning due to its straightforward incorporation into deep learning architectures, because, it consists of an encoder-decoder network that computes a probabilistic representation. Experimental evaluation was performed on image and text clustering benchmark datasets showing that the method is competitive in terms of unsupervised classification accuracy and normalized mutual information.
+The dissimilarity mixture autoencoder (DMAE) is a neural network model for feature-based clustering that incorporates a flexible dissimilarity function and can be integrated into any kind of deep learning architecture. It internally represents a dissimilarity mixture model (DMM) that extends classical methods like Bregman clustering to any convex and differentiable dissimilarity function through the reinterpretation of probabilistic notions as neural network components. Likewise, it leverages from unsupervised representation learning, allowing a simultaneous learning of the clusters and neural network's parameters. Experimental evaluation was performed on image and text clustering benchmark datasets showing that DMAE is competitive in terms of unsupervised classification accuracy and normalized mutual information.
 
-## Requirements
+## Usage and Documentation
 
-If you have [anaconda](https://www.anaconda.com/) installed, you can create the same environment that we used for the experiments using the following command:
+You can check the official `dmae` [documentation](https://dmae.readthedocs.io/en/latest/index.html).
 
-```
-conda env create -f dmae_env.yml
-```
+## Gallery and Examples
 
-Then, you must activate the environment:
+* Deep architecture:
 
-```
-source activate dmae
-```
+    ![dmae](https://raw.githubusercontent.com/larajuse/Resources/master/dmae/dmae.svg)
 
-or 
+* Clustering examples:
+    ![clustering](https://raw.githubusercontent.com/juselara1/Resources/master/dmae/clustering_examples.svg)
 
-```
-conda activate dmae
-```
+* Probabilistic interpretations:
+    ![probabilistic](https://raw.githubusercontent.com/juselara1/Resources/master/dmae/probabilistic.svg)
 
-## Usage
+These examples and the paper replication experiments can be found in the [examples](https://github.com/juselara1/dmae/tree/main/examples) folder.
 
-This implementation is based on `tf.keras.layers`, therefore, DMAE can be easily used in other deep learning models as an intermediate layer. A replication of the experiments can be found in the folder `examples`, we highly recommend to check the experiments on synthetic data first: `examples/synthetic/`. They provide an interactive experience that is useful to interpret the learned representations of DMAE.
+## Installation
 
-![example](https://raw.githubusercontent.com/larajuse/Resources/fed6276cf237f6b47b816af3d2a32c6508e00f1e/dmae/nonglobular.svg)
+You can install `dmae` from PyPi using `pip`, building from source or pulling a preconfigured docker image.
 
-For the real data `examples/real`, you can run `python experiments.py -h` for more information about the possible options.
+### PyPi
 
-Some examples are:
+To install `dmae` using `pip` you can run the following command:
 
-* Quick test:
-
-```
-python experiments.py --trials 1 --pretrain_epochs 1 --cluster_epochs 1
+```sh
+pip install dmae
 ```
 
-* Replication of the MNIST results using the euclidean dissimilarity:
+*(optional) If you have an environment with the nvidia drivers and CUDA, you can instead run:*
 
-```
-python experiments.py --dataset mnist --trials 10 --pretrain_epochs 500 --cluster_epochs 300 --da True --train_batch 256 --test_batch 1000 --dis euclidean
-```
-
-* Replication of the MNIST results using the mahalanobis dissimilarity:
-
-```
-python experiments.py --dataset mnist --trials 10 --pretrain_epochs 500 --cluster_epochs 300 --da True --train_batch 256 --test_batch 1000 --dis mahalanobis
+```sh
+pip install dmae-gpu
 ```
 
-* Replication of the Reuters experiments:
+### Source
+
+You can clone this repository:
+
+```sh
+git clone https://github.com/juselara1/dmae.git
+```
+
+Install the requirements:
+
+```sh
+pip install -r requirements.txt
+```
+
+*(optional) If you have an environment with the nvidia drivers and CUDA, you can instead run:*
+
+```sh
+pip install -r requiremets-gpu.txt
+```
+
+Finally, you can install `dmae` via setuptools:
+
+```sh
+pip install --no-deps .
+```
+
+### Docker 
+
+You can pull a preconfigured docker image with `dmae` from DockerHub:
+
+```sh
+docker pull juselara/dmae:latest
+```
+
+*(optional) If you have an environment with the nvidia drivers installed, you can instead run:*
+
+```sh
+docker pull juselara/dmae:latest-gpu
+```
+
+## Citation
 
 ```
-python experiments.py --dataset reuters10 --trials 10 --pretrain_epochs 100 --cluster_epochs 100 --train_batch 256 --test_batch 1000 --dis euclidean
+@misc{lara2020dissimilarity,
+      title={Dissimilarity Mixture Autoencoder for Deep Clustering}, 
+      author={Juan S. Lara and Fabio A. González},
+      year={2020},
+      eprint={2006.08177},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
 ```

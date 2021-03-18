@@ -1,3 +1,5 @@
+import os as _os
+import glob as _glob
 import h5py as _h5py
 import numpy as _np
 
@@ -6,39 +8,6 @@ from tensorflow import image as _tfi
 from tensorflow.data import Dataset as _Dataset
 import tensorflow_addons as _tfa
 from tensorflow_addons.image.transform_ops import angles_to_projective_transforms as _angle2projective
-
-class _Generator:
-    # TODOC
-    def __init__(self,
-            path, batch_size,
-            dataset_name
-            ):
-        self.__path = path
-        self.__batch_size = batch_size
-        self.__dataset_name = dataset_name
-        self.__batch_sample()
-
-    def __batch_sample(self):
-        #TODOC
-        def gen():
-            self.cont = 0
-            with _h5py.File(self.__path, "r") as df:
-                n_samples = df[self.__dataset_name].shape[0]
-            while True:
-                if self.cont + self.__batch_size > n_samples:
-                    self.cont = 0
-                with _h5py.File(self.__path, "r") as df:
-                    X = df[self.__dataset_name][self.cont: self.cont + self.__batch_size]
-                    yield X
-                self.cont += self.__batch_size
-        self.__gen = gen()
-
-    def reset_gen(self):
-        self.__batch_sample()
-
-    def __call__(self):
-        while True:
-            yield next(self.__gen)
 
 def _apply_transform(batch, augmentation): 
     #TODOC
@@ -79,59 +48,85 @@ def _apply_transform(batch, augmentation):
 
     return batch
 
-def make_datasets(**kwargs):
-    gen = _Generator(
-            kwargs["path"],
-            kwargs["batch_size"],
-            kwargs["dataset_name"],
+def _parse_example(record, input_shape):
+    features = {
+            "x": _tf.io.FixedLenFeature(
+                _np.prod(input_shape),
+                _tf.float32
+                ),
+            "y": _tf.io.FixedLenFeature(
+                [1], _tf.int64
+                )
+            }
+    decoded = _tf.io.parse_single_example(
+            record, features
             )
+    return list(decoded.values())
 
-    ds = _Dataset.from_generator(
-            gen, 
-            output_types = _tf.float32,
-            output_shapes = (
-                kwargs["batch_size"], *kwargs["input_shape"]
+def make_datasets(**kwargs):
+    ds = _tf.data.TFRecordDataset(
+            _glob.glob(
+                _os.path.join(
+                    kwargs["path"],
+                    kwargs["dataset_name"],
+                    "*"
+                    )
+                )
+            )
+    ds = ds.map(
+            lambda record: 
+            _parse_example(
+                record, kwargs["input_shape"]
                 )
             )
 
-    ds_test = _Generator(
-            kwargs["path"],
+    if len(kwargs["input_shape"])>1:
+        ds = ds.map(
+                lambda x, y: (
+                    _tf.reshape(
+                        x,
+                        kwargs["input_shape"]
+                        ),
+                    y
+                    )
+                )
+
+    ds_test = ds.repeat().shuffle(
+            kwargs["shuffle"]
+            ).batch(
             kwargs["batch_size"],
-            kwargs["dataset_name"],
+            drop_remainder=True
+            )
+
+    ds_train = ds_test.map(
+            lambda x, y: x
             )
 
     # augmentation
     if kwargs["augment_autoencoder"]:
-        ds_pretrain = ds.map(
+        ds_pretrain = ds_train.map(
                 lambda batch: _apply_transform(
                     batch, kwargs["augmentation"]
                     )
                 )
     else: 
-        ds_pretrain = ds
+        ds_pretrain = ds_train
     ds_pretrain = ds_pretrain.map(
-            lambda batch: (batch, batch)
+            lambda x: (x, x)
             )
 
     if kwargs["augment_clustering"]:
-        ds_clustering = ds.map(
+        ds_clustering = ds_pretrain.map(
                 lambda batch: _apply_transform(
                     batch, kwargs["augmentation"]
                     )
                 )
     else:
-        ds_clustering = ds
-    
-    # labels
-    with _h5py.File(kwargs["path"], "r") as df:
-        labels = df[kwargs["dataset_name"]+"_labels"][:]
-    steps = labels.shape[0]//kwargs["batch_size"]
-    labels = labels[:steps*kwargs["batch_size"]]
+        ds_clustering = ds_train
 
     return {
             "pretrain": ds_pretrain,
             "clustering": ds_clustering,
             "test": ds_test,
-            "labels": labels,
-            "steps": steps
+            "steps": kwargs["n_samples"]//kwargs["batch_size"]
             }

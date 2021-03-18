@@ -1,4 +1,3 @@
 {
-    "epochs": 300,
-    "batch_size": 256
+    "epochs": 300
 }

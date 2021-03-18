@@ -2,6 +2,5 @@
     "iters": 100,
     "use_cov": false,
     "n_clusters": 10,
-    "epochs": 500,
-    "batch_size": 256
+    "epochs": 500
 }

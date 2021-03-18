@@ -9,7 +9,7 @@
     },
 
     "dmae": {
-	"lambda_r": 0.1,
+	"lambda_r": 0.01,
 	"lambda_c": 1.0,
 	"optimizer": "adam",
 	"optimizer_params": {

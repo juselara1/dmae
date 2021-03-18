@@ -1,3 +1,4 @@
+import numpy as _np
 import pandas as _pd
 import os as _os
 
@@ -35,6 +36,18 @@ class Logger:
                         ]
                     )
             self.__dfs[dataset].set_index("iteration", inplace=True)
+
+    def __compute_preds(
+            self, model,
+            dataset, steps
+            ):
+        y_true = []; y_pred = []
+        for X, y in dataset.take(steps):
+            y_pred.append(model.predict(X))
+            y_true.append(y.numpy().flatten())
+
+        return _np.concatenate(y_true), _np.concatenate(y_pred)
+
     
     def __call__(
             self, model_name, 
@@ -44,18 +57,15 @@ class Logger:
         #TODOC
         model = self.__models[model_name]
         dataset = self.__datasets["test"]
-        dataset.reset_gen()
-        dataset = dataset()
 
-        y_true = self.__datasets["labels"].astype("int32")
-        preds = model.predict(
-                dataset,
-                steps=self.__datasets["steps"]
+        y_true, y_pred = self.__compute_preds(
+                model, dataset,
+                self.__datasets["steps"]
                 )
 
         scores = [
                 self.__metrics[metric](
-                    y_true, preds
+                    y_true, y_pred 
                     ) for metric in\
                         self.__dfs[current_dataset].columns
                 ]

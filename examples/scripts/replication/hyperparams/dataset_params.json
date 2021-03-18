@@ -1,6 +1,8 @@
 {
-    "path": "data/data.h5",
+    "path": "./data/",
+    "n_samples": 70000,
     "batch_size": 256,
+    "shuffle": 100,
     "dataset_name": "mnist",
     "input_shape": [28, 28, 1],
     "augmentation": {
@@ -17,7 +19,8 @@
 	    "maxval": 2
 	},
 	"horizontal_flip": false,
-	"vertical_flip": false
+	"vertical_flip": false,
+	"shape": [28, 28, 1]
     },
     "augment_autoencoder": true,
     "augment_clustering": false

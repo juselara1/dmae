@@ -1,15 +1,15 @@
+# GPU VRAM settings:
+import tensorflow as tf
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
 from argparse import ArgumentParser
 import numpy as np
 
 import utils, train, logger, models, datasets, metrics
 from dmae.metrics import unsupervised_classification_accuracy as uacc
 from sklearn.metrics import normalized_mutual_info_score as nmi, adjusted_rand_score as ars
-
-# GPU VRAM settings:
-import tensorflow as tf
-gpus = tf.config.experimental.list_physical_devices('GPU')
-for gpu in gpus:
-    tf.config.experimental.set_memory_growth(gpu, True)
 
 def make_parser():
     parser = ArgumentParser()

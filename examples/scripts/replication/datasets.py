@@ -71,7 +71,8 @@ def make_datasets(**kwargs):
                     kwargs["dataset_name"],
                     "*"
                     )
-                )
+                ),
+            num_parallel_reads=kwargs["num_parallel_reads"]
             )
     ds = ds.map(
             lambda record: 

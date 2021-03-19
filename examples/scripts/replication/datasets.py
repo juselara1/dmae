@@ -65,11 +65,14 @@ def _parse_example(record, input_shape):
 
 def make_datasets(**kwargs):
     ds = _tf.data.TFRecordDataset(
+            _glob.glob(
                 _os.path.join(
                     kwargs["path"],
-                    kwargs["dataset_name"] + ".tfrecord"
+                    kwargs["dataset_name"],
+                    "*"
                     )
                 )
+            )
     ds = ds.map(
             lambda record: 
             _parse_example(

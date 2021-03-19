@@ -20,8 +20,7 @@
 	    "maxval": 2
 	},
 	"horizontal_flip": false,
-	"vertical_flip": false,
-	"shape": [28, 28, 1]
+	"vertical_flip": false
     },
     "augment_autoencoder": true,
     "augment_clustering": false

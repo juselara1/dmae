@@ -65,15 +65,11 @@ def _parse_example(record, input_shape):
 
 def make_datasets(**kwargs):
     ds = _tf.data.TFRecordDataset(
-            _glob.glob(
                 _os.path.join(
                     kwargs["path"],
-                    kwargs["dataset_name"],
-                    "*"
+                    kwargs["dataset_name"] + ".tfrecord"
                     )
-                ),
-            num_parallel_reads=kwargs["num_parallel_reads"]
-            )
+                )
     ds = ds.map(
             lambda record: 
             _parse_example(
@@ -92,9 +88,7 @@ def make_datasets(**kwargs):
                     )
                 )
 
-    ds_test = ds.repeat().shuffle(
-            kwargs["shuffle"]
-            ).batch(
+    ds_test = ds.repeat().batch(
             kwargs["batch_size"],
             drop_remainder=True
             )

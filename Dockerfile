@@ -15,4 +15,4 @@ WORKDIR /home/dmae
 RUN cp -r /home/repo/examples /home/dmae
 RUN rm -rf /home/repo
 
-ADD ./examples/scripts/replication/data /home/dmae/examples/scripts/replication/data/
+ADD ./examples/scripts/replication/data//home/dmae/examples/scripts/replication/data/

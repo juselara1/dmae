@@ -1,8 +1,11 @@
-import os
+import os, argparse
 
 import tensorflow as tf
 import numpy as np 
 import h5py
+
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.datasets import imdb
 
 def _float_feature(value):
     return tf.train.Feature(float_list=tf.train.FloatList(value=value))
@@ -23,26 +26,37 @@ def save_record(
         shard_len, X, y,
         save_path
         ):
-    for i in range(X.shape[0]):
+    shard = 0
+    idx = 0
+    while idx != y.shape[0]:
+        print(f"shard: {shard}", end="\r")
         with tf.io.TFRecordWriter(
-                os.path.join(
-                    save_path, f"shard{i//shard_len}.tfrecords"
-                    )
-                ) as writer:
-            example = _serialize_example(X[i].flatten(), int(y[i]))
-            writer.write(example)
+            os.path.join(
+                save_path,
+                f"shard{shard}.tfrecord"
+                )
+            ) as writer:
+            for i in range(shard_len):
+                example = _serialize_example(X[idx].flatten(), int(y[idx]))
+                writer.write(example)
+                idx += 1
+
+        shard += 1
 
 if __name__ == '__main__':
-    with h5py.File("data/data.h5", "r") as df:
-        X = df["fashion"][:]
-        y = df["fashion_labels"][:]
+    (X_train, y_train), (X_test, y_test) = imdb.load_data()
+    X = np.concatenate([X_train, X_test], axis=0)
+    y = np.concatenate([y_train, y_test], axis=0)
+    
+    tokenizer = Tokenizer(num_words=2000)
+    tokenizer.fit_on_sequences(X)
+    X = tokenizer.sequences_to_matrix(X, mode='tfidf')
 
-    if not os.path.exists("fashion"):
-        os.makedirs("fashion")
-
+    if not os.path.exists("data/imdb"):
+        os.makedirs("data/imdb")
     save_record(
             1000, X, y,
-            "fashion"
+            "data/imdb"
             )
 
 

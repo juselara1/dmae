@@ -3,6 +3,7 @@
     "n_samples": 70000,
     "pretrain_batch": 256,
     "cluster_batch": 256,
+    "test_batch": 1000,
     "num_parallel_reads": 4,
     "dataset_name": "mnist",
     "input_shape": [28, 28, 1],

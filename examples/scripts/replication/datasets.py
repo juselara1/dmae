@@ -123,11 +123,16 @@ def make_datasets(**kwargs):
                     batch, kwargs["augmentation"]
                     )
                 )
+    ds_test = ds_test.batch(
+            kwargs["test_batch"],
+            drop_remainder=True
+            )
 
     return {
             "pretrain": ds_pretrain,
             "clustering": ds_clustering,
             "test": ds_test,
             "pretrain_steps": kwargs["n_samples"]//kwargs["pretrain_batch"],
-            "cluster_steps": kwargs["n_samples"]//kwargs["cluster_batch"]
+            "cluster_steps": kwargs["n_samples"]//kwargs["cluster_batch"],
+            "test_steps": kwargs["n_samples"]//kwargs["test_batch"]
             }

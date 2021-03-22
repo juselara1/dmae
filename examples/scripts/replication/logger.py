@@ -60,7 +60,7 @@ class Logger:
 
         y_true, y_pred = self.__compute_preds(
                 model, dataset,
-                self.__datasets["steps"]
+                self.__datasets["test_steps"]
                 )
 
         scores = [

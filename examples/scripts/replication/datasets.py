@@ -91,40 +91,43 @@ def make_datasets(**kwargs):
                     )
                 )
 
-    ds_test = ds.repeat().batch(
-            kwargs["batch_size"],
-            drop_remainder=True
-            )
+    ds_test = ds.repeat()
 
     ds_train = ds_test.map(
             lambda x, y: x
             )
 
+    ds_pretrain = ds_train.batch(
+        kwargs["pretrain_batch"],
+        drop_remainder=True
+        )
+
     # augmentation
     if kwargs["augment_autoencoder"]:
-        ds_pretrain = ds_train.map(
+        ds_pretrain = ds_pretrain.map(
                 lambda batch: _apply_transform(
                     batch, kwargs["augmentation"]
                     )
                 )
-    else: 
-        ds_pretrain = ds_train
     ds_pretrain = ds_pretrain.map(
             lambda x: (x, x)
             )
 
+    ds_clustering = ds_train.batch(
+            kwargs["cluster_batch"],
+            drop_remainder=True
+            )
     if kwargs["augment_clustering"]:
-        ds_clustering = ds_pretrain.map(
+        ds_clustering = ds_clustering.map(
                 lambda batch: _apply_transform(
                     batch, kwargs["augmentation"]
                     )
                 )
-    else:
-        ds_clustering = ds_train
 
     return {
             "pretrain": ds_pretrain,
             "clustering": ds_clustering,
             "test": ds_test,
-            "steps": kwargs["n_samples"]//kwargs["batch_size"]
+            "pretrain_steps": kwargs["n_samples"]//kwargs["pretrain_batch"],
+            "cluster_steps": kwargs["n_samples"]//kwargs["cluster_batch"]
             }

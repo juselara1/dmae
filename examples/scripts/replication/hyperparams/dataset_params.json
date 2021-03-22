@@ -1,8 +1,8 @@
 {
     "path": "./data/",
     "n_samples": 70000,
-    "batch_size": 256,
-    "shuffle": 100,
+    "pretrain_batch": 256,
+    "cluster_batch": 256,
     "num_parallel_reads": 4,
     "dataset_name": "mnist",
     "input_shape": [28, 28, 1],

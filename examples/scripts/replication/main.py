@@ -46,9 +46,9 @@ def make_iteration(arguments, scorer, iteration):
     
     # Pretrain
     arguments["pretrain_params"]\
-            ["steps_per_epoch"] = cur_datasets["steps"]
+            ["steps_per_epoch"] = cur_datasets["pretrain_steps"]
     arguments["train_params"]\
-            ["steps_per_epoch"] = cur_datasets["steps"]
+            ["steps_per_epoch"] = cur_datasets["cluster_steps"]
 
     train.pretrain(
             cur_models, cur_datasets,
